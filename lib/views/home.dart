@@ -28,16 +28,18 @@ class HomePage extends StatelessWidget {
                   height: 350,
                   color: Colors.black38,
                 ),
-                // Row(
-                //   children: [
-                //     SizedBox(width: 100,),
-                //     CircleAvatar(
-                //       child: CircleAvatar(
-                //         child: Image.asset('assets/images/dp.png'),
-                //       ),
-                //     )
-                //   ],
-                // )
+                Row(
+                  children: [
+                    SizedBox(width: 80,),
+                    CircleAvatar(
+                      radius: 100,
+                      child: CircleAvatar(
+                        radius: 90,
+                        backgroundImage: AssetImage('assets/images/dp.png'),
+                      ),
+                    )
+                  ],
+                )
               ],
             )
           ],
