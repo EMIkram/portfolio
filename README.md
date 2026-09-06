@@ -1,16 +1,29 @@
-# app
+# Muhammad Ikram Ul Haq — Portfolio
 
-A new Flutter project.
+Flutter portfolio with project mockups, screenshot galleries, experience, and contact information.
 
-## Getting Started
+## Edit and preview
 
-This project is a starting point for a Flutter application.
+Use Flutter 3.41.4 (the version pinned in the publishing workflow).
 
-A few resources to get you started if this is your first Flutter project:
+```sh
+flutter pub get
+flutter run -d chrome
+```
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+- `lib/portfolio_data.dart`: projects, contributions, screenshot paths.
+- `lib/main.dart`: introduction, experience, contact, and page layout.
+- `assets/images/`: portrait and project screenshots.
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Publish updates
+
+GitHub Pages builds and publishes automatically when changes reach `master`. The workflow runs analysis and tests before deployment. In repository Settings → Pages, select **GitHub Actions** as the source.
+
+```sh
+git add lib assets web pubspec.yaml pubspec.lock test
+git commit -m "Update portfolio"
+git push origin master
+```
+
+Check the repository's Actions tab for deployment status. The Pages environment shows the live URL after the first successful deployment.
+

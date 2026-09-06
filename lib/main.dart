@@ -1,113 +1,1025 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'portfolio_data.dart';
+import 'project_artwork.dart';
+import 'screenshot_gallery.dart';
 
-void main() {
-  runApp(MyApp());
-}
+const ink = Color(0xFF25252A);
+const paper = Color(0xFFF8F7F3);
+const violet = Color(0xFF7150CF);
+const muted = Color(0xFF74736F);
+
+void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+  const MyApp({super.key});
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
+  Widget build(BuildContext context) => MaterialApp(
+    title: 'Ikram Ul Haq — Flutter & iOS Developer',
+    debugShowCheckedModeBanner: false,
+    theme: ThemeData(
+      useMaterial3: true,
+      scaffoldBackgroundColor: paper,
+      colorScheme: ColorScheme.fromSeed(seedColor: violet, surface: paper),
+      fontFamily: 'Arial',
+      textTheme: const TextTheme(
+        bodyMedium: TextStyle(color: ink, height: 1.5),
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      dividerColor: const Color(0xFFE2E0DA),
+    ),
+    home: const PortfolioPage(),
+  );
+}
+
+class PortfolioPage extends StatefulWidget {
+  const PortfolioPage({super.key});
+  @override
+  State<PortfolioPage> createState() => _PortfolioPageState();
+}
+
+class _PortfolioPageState extends State<PortfolioPage> {
+  final _scroll = ScrollController();
+  final _work = GlobalKey();
+  final _about = GlobalKey();
+  final _contact = GlobalKey();
+
+  @override
+  void dispose() {
+    _scroll.dispose();
+    super.dispose();
+  }
+
+  void _go(GlobalKey key) {
+    final target = key.currentContext;
+    if (target != null) {
+      Scrollable.ensureVisible(
+        target,
+        duration: MediaQuery.disableAnimationsOf(context)
+            ? Duration.zero
+            : const Duration(milliseconds: 800),
+        curve: Curves.easeInOutCubic,
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    body: SelectionArea(
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final wide = constraints.maxWidth >= 850;
+          final padding = wide ? 60.0 : 24.0;
+          return Scrollbar(
+            controller: _scroll,
+            child: SingleChildScrollView(
+              controller: _scroll,
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 1440),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: padding),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _nav(wide),
+                        _hero(wide),
+                        const SizedBox(height: 65),
+                        _sectionLabel(
+                          '01 / SELECTED WORK',
+                          'A few things I’ve helped bring to life.',
+                          key: _work,
+                        ),
+                        const SizedBox(height: 30),
+                        Text(
+                          'Thoughtful software.\nDifferent worlds.',
+                          style: TextStyle(
+                            fontSize: wide ? 56 : 38,
+                            height: 1.07,
+                            letterSpacing: -2.2,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(height: 14),
+                        const Text(
+                          'From dealership operations to everyday wellbeing.\nExplore the work, one scroll at a time.',
+                          style: TextStyle(
+                            color: muted,
+                            fontSize: 16,
+                            height: 1.7,
+                          ),
+                        ),
+                        const SizedBox(height: 45),
+                        if (wide)
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                flex: 11,
+                                child: Column(
+                                  children: [
+                                    for (final index in [0, 2, 4])
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                          bottom: 80,
+                                        ),
+                                        child: _project(
+                                          index,
+                                          index == 0 ? 390 : 430,
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(width: 64),
+                              Expanded(
+                                flex: 9,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(top: 165),
+                                  child: Column(
+                                    children: [
+                                      for (final index in [1, 3, 5])
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                            bottom: 88,
+                                          ),
+                                          child: _project(
+                                            index,
+                                            index == 3 ? 350 : 390,
+                                          ),
+                                        ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )
+                        else ...[
+                          for (var i = 0; i < projects.length; i++)
+                            Padding(
+                              padding: EdgeInsets.only(
+                                left: i.isOdd ? 16 : 0,
+                                right: i.isEven ? 16 : 0,
+                                bottom: 45,
+                              ),
+                              child: _project(i, 330),
+                            ),
+                        ],
+                        const Divider(),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 28),
+                          child: Text(
+                            'MORE WORLDS I’VE WORKED IN',
+                            style: _eyebrow,
+                          ),
+                        ),
+                        Wrap(
+                          spacing: 14,
+                          runSpacing: 14,
+                          children: [
+                            for (final p in additionalProjects)
+                              ActionChip(
+                                avatar: Icon(p.$3, size: 17),
+                                label: Text(p.$1),
+                                backgroundColor: Colors.transparent,
+                                side: const BorderSide(
+                                  color: Color(0xFFDEDDD7),
+                                ),
+                                padding: const EdgeInsets.all(10),
+                                onPressed: () => showDialog<void>(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    title: Text(p.$1),
+                                    content: Text(p.$2),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(context),
+                                        child: const Text('Close'),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                        const SizedBox(height: 110),
+                        _aboutSection(wide),
+                        const SizedBox(height: 100),
+                        _contactSection(wide),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 30),
+                          child: Wrap(
+                            alignment: WrapAlignment.spaceBetween,
+                            spacing: 45,
+                            runSpacing: 12,
+                            children: [
+                              const Text(
+                                '© Muhammad Ikram Ul Haq',
+                                style: TextStyle(fontSize: 12, color: muted),
+                              ),
+                              const Text(
+                                'Built with Flutter. Made with intention.',
+                                style: TextStyle(fontSize: 12, color: muted),
+                              ),
+                              TextButton(
+                                onPressed: () => _scroll.animateTo(
+                                  0,
+                                  duration:
+                                      MediaQuery.disableAnimationsOf(context)
+                                      ? Duration.zero
+                                      : const Duration(milliseconds: 700),
+                                  curve: Curves.easeInOut,
+                                ),
+                                child: const Text('Back to top ↑'),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    ),
+  );
+
+  TextStyle get _eyebrow => const TextStyle(
+    fontSize: 10,
+    letterSpacing: 2,
+    fontWeight: FontWeight.w600,
+    color: muted,
+  );
+
+  Widget _nav(bool wide) => Padding(
+    padding: const EdgeInsets.symmetric(vertical: 28),
+    child: Row(
+      children: [
+        Container(
+          width: 37,
+          height: 37,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: ink,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: const Text(
+            'i.',
+            style: TextStyle(
+              color: paper,
+              fontSize: 25,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        if (wide) ...[
+          const SizedBox(width: 12),
+          const Text(
+            'ikram ul haq',
+            style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
+          ),
+        ],
+        const Spacer(),
+        TextButton(onPressed: () => _go(_work), child: const Text('Work')),
+        TextButton(onPressed: () => _go(_about), child: const Text('About')),
+        const SizedBox(width: 10),
+        if (!wide)
+          IconButton(
+            onPressed: () => _go(_contact),
+            tooltip: 'Let’s talk',
+            icon: const Icon(Icons.north_east),
+          ),
+        if (wide)
+          OutlinedButton(
+            onPressed: () => _go(_contact),
+            style: OutlinedButton.styleFrom(
+              foregroundColor: ink,
+              side: const BorderSide(color: Color(0xFFCBC9C3)),
+              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 17),
+            ),
+            child: const Text('Let’s talk ↗'),
+          ),
+      ],
+    ),
+  );
+
+  Widget _hero(bool wide) {
+    final intro = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Container(
+              width: 7,
+              height: 7,
+              decoration: const BoxDecoration(
+                color: violet,
+                shape: BoxShape.circle,
+              ),
+            ),
+            const SizedBox(width: 9),
+            Text('FLUTTER & iOS DEVELOPER', style: _eyebrow),
+          ],
+        ),
+        const SizedBox(height: 28),
+        Text(
+          'Great ideas.\nBeautifully\nengineered.',
+          style: TextStyle(
+            fontSize: wide ? 78 : 53,
+            height: 1.02,
+            letterSpacing: wide ? -4.5 : -2.6,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        const SizedBox(height: 24),
+        const Text(
+          'I’m Ikram. I turn complex problems into intuitive\ndigital experiences — for mobile, web, and the\npeople who use them.',
+          style: TextStyle(color: muted, fontSize: 16, height: 1.8),
+        ),
+        const SizedBox(height: 30),
+        FilledButton(
+          onPressed: () => _go(_work),
+          style: FilledButton.styleFrom(
+            backgroundColor: ink,
+            padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 22),
+          ),
+          child: const Text('Explore my work     ↘'),
+        ),
+        const SizedBox(height: 35),
+        const Text(
+          'BASED IN ISLAMABAD, PAKISTAN',
+          style: TextStyle(fontSize: 9, letterSpacing: 1.8, color: muted),
+        ),
+      ],
+    );
+    final art = SizedBox(
+      height: wide ? 490 : 360,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Positioned.fill(
+            left: wide ? 20 : 0,
+            top: 30,
+            bottom: 30,
+            child: Transform.rotate(
+              angle: .035,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: const Color(0xFFE9E4F1),
+                  borderRadius: BorderRadius.circular(180),
+                ),
+                clipBehavior: Clip.antiAlias,
+                child: Image.asset(
+                  'assets/images/ikram.png',
+                  fit: BoxFit.cover,
+                  semanticLabel: 'Muhammad Ikram Ul Haq',
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            right: 0,
+            top: 2,
+            child: Transform.rotate(
+              angle: .08,
+              child: Container(
+                padding: const EdgeInsets.all(17),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFE7EDCD),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: const Text(
+                  'A little craft.\nA lot of care.',
+                  style: TextStyle(
+                    fontSize: 15,
+                    height: 1.3,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            left: 0,
+            bottom: 4,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 16),
+              decoration: BoxDecoration(
+                color: paper,
+                border: Border.all(color: const Color(0xFFDDD9E2)),
+                borderRadius: BorderRadius.circular(17),
+              ),
+              child: const Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    '15+',
+                    style: TextStyle(fontSize: 32, fontWeight: FontWeight.w600),
+                  ),
+                  SizedBox(width: 13),
+                  Text(
+                    'apps contributed to\n& brought to life',
+                    style: TextStyle(fontSize: 11, color: muted),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    return Padding(
+      padding: EdgeInsets.only(top: wide ? 65 : 35, bottom: 35),
+      child: Column(
+        children: [
+          if (wide)
+            Row(
+              children: [
+                Expanded(flex: 6, child: intro),
+                const SizedBox(width: 30),
+                Expanded(flex: 5, child: art),
+              ],
+            )
+          else ...[
+            intro,
+            const SizedBox(height: 35),
+            art,
+          ],
+          const SizedBox(height: 70),
+          const Divider(),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 22),
+            child: Wrap(
+              alignment: WrapAlignment.center,
+              spacing: wide ? 45 : 24,
+              runSpacing: 18,
+              children: [
+                Text('THE TOOLKIT', style: _eyebrow),
+                for (final label in [
+                  'Flutter',
+                  'Dart',
+                  'Native iOS',
+                  'Firebase',
+                  'BLoC / Cubit',
+                  'CI/CD',
+                ])
+                  Text(
+                    label,
+                    style: const TextStyle(
+                      fontSize: 13,
+                      color: muted,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          const Divider(),
+        ],
+      ),
     );
   }
+
+  Widget _sectionLabel(String label, String trailing, {Key? key}) => SizedBox(
+    key: key,
+    width: double.infinity,
+    child: Wrap(
+      alignment: WrapAlignment.spaceBetween,
+      spacing: 15,
+      runSpacing: 10,
+      children: [
+        Text(label, style: _eyebrow),
+        Text(trailing, style: const TextStyle(fontSize: 11, color: muted)),
+      ],
+    ),
+  );
+
+  Widget _project(int index, double height) => ProjectTile(
+    project: projects[index],
+    index: index,
+    height: height,
+    scroll: _scroll,
+    onTap: () => _showProject(projects[index]),
+  );
+
+  void _showProject(Project project) => showDialog<void>(
+    context: context,
+    builder: (context) => Dialog(
+      insetPadding: const EdgeInsets.all(22),
+      clipBehavior: Clip.antiAlias,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 650),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Stack(
+                children: [
+                  Container(
+                    height: 285,
+                    color: project.color,
+                    child: ProjectArtwork(project: project),
+                  ),
+                  Positioned(
+                    top: 10,
+                    right: 10,
+                    child: IconButton.filledTonal(
+                      tooltip: 'Close project',
+                      onPressed: () => Navigator.pop(context),
+                      icon: const Icon(Icons.close),
+                    ),
+                  ),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.all(28),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(project.category, style: _eyebrow),
+                    const SizedBox(height: 10),
+                    Text(
+                      project.name,
+                      style: const TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    const Text(
+                      'My contribution',
+                      style: TextStyle(fontWeight: FontWeight.w700),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      project.contribution,
+                      style: const TextStyle(fontSize: 15, height: 1.7),
+                    ),
+                    const SizedBox(height: 20),
+                    if (project.highlights.isNotEmpty) ...[
+                      const Text(
+                        'Inside the product',
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      for (final highlight in project.highlights)
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 18),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                highlight.$1,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              const SizedBox(height: 5),
+                              Text(
+                                highlight.$2,
+                                style: const TextStyle(
+                                  color: muted,
+                                  height: 1.6,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                    ],
+                    if (project.screens.isNotEmpty) ...[
+                      ScreenshotGallery(project: project),
+                      const SizedBox(height: 20),
+                    ],
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        for (final tag in project.tags) Chip(label: Text(tag)),
+                      ],
+                    ),
+                    if (project.link != null) ...[
+                      const SizedBox(height: 18),
+                      SelectableText(project.link!),
+                      TextButton.icon(
+                        onPressed: () => _copy(
+                          context,
+                          project.link!,
+                          'Project link copied',
+                        ),
+                        icon: const Icon(Icons.copy, size: 16),
+                        label: const Text('Copy project link'),
+                      ),
+                    ],
+                    const SizedBox(height: 10),
+                    Text(
+                      project.screens.isEmpty
+                          ? 'Visuals are concept previews, not original product screenshots.'
+                          : 'Product screenshots presented in portfolio mockups.',
+                      style: TextStyle(fontSize: 11, color: muted),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
+
+  Widget _aboutSection(bool wide) {
+    final story = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'A developer’s mind.\nA craftsperson’s care.',
+          style: TextStyle(
+            fontSize: wide ? 45 : 35,
+            letterSpacing: -1.8,
+            height: 1.12,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        const SizedBox(height: 24),
+        const Text(
+          'I’m Muhammad Ikram Ul Haq, a Flutter developer with native iOS experience. I’ve independently completed several projects from start to finish and led teams to deliver several more. Across startups, product teams, and service companies, I bring hands-on engineering and the leadership to help teams ship with confidence.',
+          style: TextStyle(fontSize: 16, height: 1.8, color: muted),
+        ),
+        const SizedBox(height: 18),
+        const Text(
+          'My focus is clean architecture, intuitive interfaces, and the engineering behind them: reliable integrations, maintainable code, and thoughtful release workflows.',
+          style: TextStyle(fontSize: 16, height: 1.8, color: muted),
+        ),
+        const SizedBox(height: 28),
+        const Text(
+          'BS Computer Science · Federal Urdu University\n2016–2020 · CGPA 3.59',
+          style: TextStyle(fontSize: 12, height: 1.8, color: muted),
+        ),
+      ],
+    );
+    final experience = Column(
+      children: [
+        for (final role in [
+          ('Techtronix', 'Team Lead Flutter Developer', 'MAR 2024 — PRESENT'),
+          (
+            'AT-Tech',
+            'Software Engineer · Flutter & iOS',
+            'JUN 2022 — MAR 2024',
+          ),
+          ('Heuristify', 'Flutter Developer', 'JAN 2022 — JUN 2022'),
+          ('SBS', 'Associate Software Engineer', 'NOV 2020 — JAN 2022'),
+          (
+            'Independent',
+            'Freelance Mobile App Developer',
+            'AUG 2019 — SEP 2020',
+          ),
+        ])
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: 21),
+            decoration: const BoxDecoration(
+              border: Border(bottom: BorderSide(color: Color(0xFFDEDDD7))),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  role.$3,
+                  style: const TextStyle(
+                    fontSize: 9,
+                    letterSpacing: 1.1,
+                    color: muted,
+                  ),
+                ),
+                const SizedBox(height: 9),
+                Text(
+                  role.$1,
+                  style: const TextStyle(
+                    fontSize: 21,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  role.$2,
+                  style: const TextStyle(fontSize: 12, color: muted),
+                ),
+              ],
+            ),
+          ),
+      ],
+    );
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _sectionLabel(
+          '02 / A LITTLE ABOUT ME',
+          'The person behind the pixels.',
+          key: _about,
+        ),
+        const SizedBox(height: 35),
+        if (wide)
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(child: story),
+              const SizedBox(width: 95),
+              Expanded(child: experience),
+            ],
+          )
+        else ...[
+          story,
+          const SizedBox(height: 25),
+          experience,
+        ],
+      ],
+    );
+  }
+
+  Widget _contactSection(bool wide) => Container(
+    key: _contact,
+    width: double.infinity,
+    padding: EdgeInsets.all(wide ? 55 : 27),
+    decoration: BoxDecoration(
+      color: ink,
+      borderRadius: BorderRadius.circular(25),
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          '03 / WHAT’S NEXT?',
+          style: TextStyle(
+            fontSize: 10,
+            letterSpacing: 2,
+            color: Color(0xFFB7B3C0),
+          ),
+        ),
+        const SizedBox(height: 24),
+        Text(
+          'Have something\ngood in mind?',
+          style: TextStyle(
+            fontSize: wide ? 65 : 39,
+            height: 1.05,
+            letterSpacing: -2,
+            fontWeight: FontWeight.w500,
+            color: paper,
+          ),
+        ),
+        const SizedBox(height: 22),
+        const Text(
+          'Let’s turn it into something people love to use.',
+          style: TextStyle(color: Color(0xFFB7B3C0), height: 1.6),
+        ),
+        const SizedBox(height: 25),
+        const SelectableText(
+          'emikramulhaq@gmail.com',
+          style: TextStyle(color: Color(0xFFD0BDFF), fontSize: 18),
+        ),
+        const SizedBox(height: 18),
+        Wrap(
+          spacing: 12,
+          runSpacing: 12,
+          children: [
+            FilledButton.icon(
+              onPressed: () =>
+                  _copy(context, 'emikramulhaq@gmail.com', 'Email copied'),
+              style: FilledButton.styleFrom(
+                backgroundColor: const Color(0xFFD0BDFF),
+                foregroundColor: ink,
+              ),
+              icon: const Icon(Icons.copy, size: 15),
+              label: const Text('Copy email'),
+            ),
+            TextButton(
+              onPressed: () => _social(
+                'LinkedIn',
+                'https://www.linkedin.com/in/em-ikram-a718a9145/',
+              ),
+              child: const Text('LinkedIn ↗', style: TextStyle(color: paper)),
+            ),
+            TextButton(
+              onPressed: () => _social('GitHub', 'https://github.com/EMIkram'),
+              child: const Text('GitHub ↗', style: TextStyle(color: paper)),
+            ),
+          ],
+        ),
+      ],
+    ),
+  );
+
+  void _social(String name, String url) => showDialog<void>(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: Text(name),
+      content: SelectableText(url),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Close'),
+        ),
+        FilledButton(
+          onPressed: () => _copy(context, url, '$name link copied'),
+          child: const Text('Copy link'),
+        ),
+      ],
+    ),
+  );
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key, required this.title}) : super(key: key);
+Future<void> _copy(BuildContext context, String value, String message) async {
+  try {
+    await Clipboard.setData(ClipboardData(text: value));
+    if (context.mounted) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(message)));
+    }
+  } catch (_) {
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Could not copy. Select and copy the text manually.'),
+        ),
+      );
+    }
+  }
+}
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
+class ProjectTile extends StatefulWidget {
+  const ProjectTile({
+    super.key,
+    required this.project,
+    required this.index,
+    required this.height,
+    required this.scroll,
+    required this.onTap,
+  });
+  final Project project;
+  final int index;
+  final double height;
+  final ScrollController scroll;
+  final VoidCallback onTap;
+  @override
+  State<ProjectTile> createState() => _ProjectTileState();
+}
 
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+class _ProjectTileState extends State<ProjectTile> {
+  final _anchor = GlobalKey();
+  bool _hovered = false;
+  double _shift = 0;
+  double _reveal = 1;
+  bool _reduceMotion = false;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
+  void initState() {
+    super.initState();
+    widget.scroll.addListener(_update);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _update());
   }
 
   @override
-  Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _reduceMotion = MediaQuery.disableAnimationsOf(context);
+  }
+
+  @override
+  void dispose() {
+    widget.scroll.removeListener(_update);
+    super.dispose();
+  }
+
+  void _update() {
+    if (!mounted) return;
+    final box = _anchor.currentContext?.findRenderObject() as RenderBox?;
+    if (box == null || !box.hasSize) return;
+    final viewport = MediaQuery.sizeOf(context).height;
+    final y = box.localToGlobal(Offset.zero).dy;
+    final progress = ((viewport - y) / (viewport + box.size.height)).clamp(
+      0.0,
+      1.0,
+    );
+    final shift = _reduceMotion ? 0.0 : (progress - .5) * 36;
+    final reveal = _reduceMotion ? 1.0 : ((viewport - y) / 140).clamp(0.0, 1.0);
+    if ((_shift - shift).abs() > .3 || (_reveal - reveal).abs() > .01) {
+      setState(() {
+        _shift = shift;
+        _reveal = reveal;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) => SizedBox(
+    key: _anchor,
+    child: Opacity(
+      opacity: .15 + .85 * _reveal,
+      child: Transform.translate(
+        offset: Offset(0, (1 - _reveal) * 24),
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            MouseRegion(
+              onEnter: (_) => setState(() => _hovered = true),
+              onExit: (_) => setState(() => _hovered = false),
+              child: Material(
+                color: widget.project.color,
+                borderRadius: BorderRadius.circular(20),
+                clipBehavior: Clip.antiAlias,
+                child: InkWell(
+                  onTap: widget.onTap,
+                  onFocusChange: (value) => setState(() => _hovered = value),
+                  child: Semantics(
+                    label: 'View ${widget.project.name} project details',
+                    button: true,
+                    child: SizedBox(
+                      height: widget.height,
+                      width: double.infinity,
+                      child: Stack(
+                        children: [
+                          Positioned.fill(
+                            child: AnimatedScale(
+                              scale: _hovered && !_reduceMotion ? 1.04 : 1,
+                              duration: _reduceMotion
+                                  ? Duration.zero
+                                  : const Duration(milliseconds: 400),
+                              curve: Curves.easeOutCubic,
+                              child: Transform.translate(
+                                offset: Offset(0, _shift),
+                                child: ProjectArtwork(project: widget.project),
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            right: 17,
+                            top: 17,
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 180),
+                              width: 37,
+                              height: 37,
+                              decoration: BoxDecoration(
+                                color: _hovered
+                                    ? ink
+                                    : Colors.white.withValues(alpha: .7),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                Icons.north_east,
+                                size: 17,
+                                color: _hovered ? paper : ink,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ),
+            const SizedBox(height: 22),
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    widget.project.name,
+                    style: const TextStyle(
+                      fontSize: 25,
+                      letterSpacing: -.7,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                Text(
+                  '0${widget.index + 1}',
+                  style: const TextStyle(fontSize: 11, color: muted),
+                ),
+              ],
+            ),
+            const SizedBox(height: 6),
             Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+              widget.project.summary,
+              style: const TextStyle(fontSize: 14, color: muted),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              widget.project.category,
+              style: const TextStyle(
+                fontSize: 9,
+                letterSpacing: 1.6,
+                color: muted,
+              ),
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
-  }
+    ),
+  );
 }
