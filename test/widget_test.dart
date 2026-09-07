@@ -5,6 +5,76 @@ import 'package:portfolio_flutter/portfolio_data.dart';
 import 'package:portfolio_flutter/screenshot_gallery.dart';
 
 void main() {
+  testWidgets('Carbee collection expands and collapses', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: SingleChildScrollView(
+            child: CarbeeScreenWall(project: projects.first),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.byType(BrowserFrame), findsNothing);
+    await tester.tap(find.text('A closer look at Carbee'));
+    await tester.pumpAndSettle();
+    expect(find.byType(BrowserFrame), findsWidgets);
+    await tester.tap(find.text('A closer look at Carbee'));
+    await tester.pumpAndSettle();
+    expect(find.byType(BrowserFrame), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
+  testWidgets('My Treats offers only iOS and restaurant website', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Builder(
+            builder: (context) => TextButton(
+              onPressed: () => showProjectLinks(context, 'My Treats'),
+              child: const Text('Open'),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.tap(find.text('Open'));
+    await tester.pumpAndSettle();
+    expect(find.text('Google Play'), findsNothing);
+    expect(find.text('App Store'), findsOneWidget);
+    expect(find.text('Restaurant website'), findsOneWidget);
+    expect(
+      projectLinks['My Treats']!.first.$2,
+      'https://apps.apple.com/gb/app/my-treats/id1553674065',
+    );
+  });
+  testWidgets('Projects with both stores offer a platform chooser', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Builder(
+            builder: (context) => TextButton(
+              onPressed: () => showProjectLinks(context, 'Carbee'),
+              child: const Text('Open Carbee'),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.tap(find.text('Open Carbee'));
+    await tester.pumpAndSettle();
+    expect(find.text('Explore Carbee'), findsOneWidget);
+    expect(find.text('Google Play'), findsOneWidget);
+    expect(find.text('App Store'), findsOneWidget);
+    expect(find.text('Website'), findsOneWidget);
+    await tester.tap(find.byTooltip('Close'));
+    await tester.pumpAndSettle();
+    expect(find.text('Explore Carbee'), findsNothing);
+  });
   for (final width in [390.0, 1440.0]) {
     testWidgets('Portfolio navigation and project details at $width px', (
       tester,
@@ -15,14 +85,11 @@ void main() {
       addTearDown(tester.view.resetDevicePixelRatio);
       await tester.pumpWidget(const MyApp());
       await tester.pumpAndSettle();
-      expect(
-        find.text('Great ideas.\nBeautifully\nengineered.'),
-        findsOneWidget,
-      );
+      expect(find.text('Muhammad\nIkram Ul Haq.'), findsOneWidget);
       expect(tester.takeException(), isNull);
-      await tester.ensureVisible(find.text('Explore my work     ↘'));
+      await tester.ensureVisible(find.text('View selected work ↘'));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Explore my work     ↘'));
+      await tester.tap(find.text('View selected work ↘'));
       await tester.pumpAndSettle();
       final carbee = find.byWidgetPredicate(
         (w) =>

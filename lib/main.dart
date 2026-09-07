@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'portfolio_data.dart';
 import 'project_artwork.dart';
 import 'screenshot_gallery.dart';
+import 'external_link.dart'
+    if (dart.library.js_interop) 'external_link_web.dart';
 
 const ink = Color(0xFF25252A);
 const paper = Color(0xFFF8F7F3);
@@ -10,6 +12,238 @@ const violet = Color(0xFF7150CF);
 const muted = Color(0xFF74736F);
 
 void main() => runApp(const MyApp());
+
+void showProjectLinks(
+  BuildContext context,
+  String name, {
+  String? fallback,
+  String? description,
+  IconData fallbackIcon = Icons.apps_rounded,
+}) {
+  final links =
+      projectLinks[name] ??
+      (fallback == null ? <(String, String)>[] : [('Visit project', fallback)]);
+  void open(String url) {
+    if (!openExternalLink(url)) {
+      Clipboard.setData(ClipboardData(text: url));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Project link copied')));
+    }
+  }
+
+  if (links.length == 1 && description == null) {
+    open(links.first.$2);
+    return;
+  }
+  showDialog<void>(
+    context: context,
+    builder: (dialogContext) => Dialog(
+      backgroundColor: paper,
+      clipBehavior: Clip.antiAlias,
+      insetPadding: const EdgeInsets.all(22),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 460),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(26),
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Color(0xFF25252A), Color(0xFF423952)],
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(18),
+                          child: Container(
+                            width: 68,
+                            height: 68,
+                            color: Colors.white,
+                            child: projectIcons[name] == null
+                                ? Icon(fallbackIcon, color: violet, size: 32)
+                                : Image.asset(
+                                    projectIcons[name]!,
+                                    fit: BoxFit.contain,
+                                  ),
+                          ),
+                        ),
+                        IconButton(
+                          tooltip: 'Close',
+                          onPressed: () => Navigator.pop(dialogContext),
+                          icon: const Icon(Icons.close, color: Colors.white70),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 24),
+                    const Text(
+                      'PROJECT DIRECTORY',
+                      style: TextStyle(
+                        color: Color(0xFFD0BDFF),
+                        fontSize: 10,
+                        letterSpacing: 2,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Explore $name',
+                      style: const TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text(
+                      description ??
+                          'Choose where you’d like to explore this product.',
+                      style: const TextStyle(
+                        color: muted,
+                        height: 1.6,
+                        fontSize: 14,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    for (final link in links)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: Material(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(16),
+                            onTap: () {
+                              Navigator.pop(dialogContext);
+                              open(link.$2);
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(16),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    width: 42,
+                                    height: 42,
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFF0EBFA),
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: Icon(
+                                      link.$1 == 'App Store'
+                                          ? Icons.apple
+                                          : link.$1 == 'Google Play'
+                                          ? Icons.android
+                                          : Icons.language,
+                                      color: violet,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 14),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          link.$1,
+                                          style: const TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 3),
+                                        Text(
+                                          link.$1 == 'App Store'
+                                              ? 'View the iOS app'
+                                              : link.$1 == 'Google Play'
+                                              ? 'View the Android app'
+                                              : 'Visit the official site',
+                                          style: const TextStyle(
+                                            fontSize: 11,
+                                            color: muted,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const Icon(
+                                    Icons.north_east,
+                                    size: 18,
+                                    color: violet,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    TextButton(
+                      onPressed: () => Navigator.pop(dialogContext),
+                      child: const Text('Close'),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+class ProjectIcon extends StatelessWidget {
+  const ProjectIcon({
+    super.key,
+    required this.name,
+    required this.fallback,
+    this.size = 44,
+    this.link,
+  });
+  final String name;
+  final IconData fallback;
+  final double size;
+  final String? link;
+  @override
+  Widget build(BuildContext context) => Tooltip(
+    message: 'Explore $name',
+    child: InkWell(
+      onTap: projectLinks.containsKey(name) || link != null
+          ? () => showProjectLinks(context, name, fallback: link)
+          : null,
+      borderRadius: BorderRadius.circular(12),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          width: size,
+          height: size,
+          color: Colors.white,
+          child: projectIcons[name] != null
+              ? Image.asset(
+                  projectIcons[name]!,
+                  fit: BoxFit.contain,
+                  semanticLabel: '$name app icon',
+                )
+              : Icon(fallback, size: size * .55, color: violet),
+        ),
+      ),
+    ),
+  );
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -68,14 +302,14 @@ class _PortfolioPageState extends State<PortfolioPage> {
       child: LayoutBuilder(
         builder: (context, constraints) {
           final wide = constraints.maxWidth >= 850;
-          final padding = wide ? 60.0 : 24.0;
+          final padding = wide ? 32.0 : 18.0;
           return Scrollbar(
             controller: _scroll,
             child: SingleChildScrollView(
               controller: _scroll,
               child: Center(
                 child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 1440),
+                  constraints: const BoxConstraints(maxWidth: 1760),
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: padding),
                     child: Column(
@@ -91,7 +325,7 @@ class _PortfolioPageState extends State<PortfolioPage> {
                         ),
                         const SizedBox(height: 30),
                         Text(
-                          'Thoughtful software.\nDifferent worlds.',
+                          'Real products.\nMeaningful contributions.',
                           style: TextStyle(
                             fontSize: wide ? 56 : 38,
                             height: 1.07,
@@ -101,7 +335,7 @@ class _PortfolioPageState extends State<PortfolioPage> {
                         ),
                         const SizedBox(height: 14),
                         const Text(
-                          'From dealership operations to everyday wellbeing.\nExplore the work, one scroll at a time.',
+                          'Web platforms, shared journeys, and everyday healthcare.\nA selection of the products I’ve helped build.',
                           style: TextStyle(
                             color: muted,
                             fontSize: 16,
@@ -109,6 +343,16 @@ class _PortfolioPageState extends State<PortfolioPage> {
                           ),
                         ),
                         const SizedBox(height: 45),
+                        _project(
+                          0,
+                          wide
+                              ? ((constraints.maxWidth - padding * 2) * .4)
+                                    .clamp(470, 660)
+                              : 300,
+                        ),
+                        const SizedBox(height: 32),
+                        CarbeeScreenWall(project: projects.first),
+                        const SizedBox(height: 65),
                         if (wide)
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -117,35 +361,32 @@ class _PortfolioPageState extends State<PortfolioPage> {
                                 flex: 11,
                                 child: Column(
                                   children: [
-                                    for (final index in [0, 2, 4])
+                                    for (final index in [1, 3, 5])
                                       Padding(
                                         padding: const EdgeInsets.only(
                                           bottom: 80,
                                         ),
                                         child: _project(
                                           index,
-                                          index == 0 ? 390 : 430,
+                                          index == 1 ? 520 : 470,
                                         ),
                                       ),
                                   ],
                                 ),
                               ),
-                              const SizedBox(width: 64),
+                              const SizedBox(width: 65),
                               Expanded(
                                 flex: 9,
                                 child: Padding(
-                                  padding: const EdgeInsets.only(top: 165),
+                                  padding: const EdgeInsets.only(top: 145),
                                   child: Column(
                                     children: [
-                                      for (final index in [1, 3, 5])
+                                      for (final index in [2, 4, 6])
                                         Padding(
                                           padding: const EdgeInsets.only(
-                                            bottom: 88,
+                                            bottom: 80,
                                           ),
-                                          child: _project(
-                                            index,
-                                            index == 3 ? 350 : 390,
-                                          ),
+                                          child: _project(index, 460),
                                         ),
                                     ],
                                   ),
@@ -154,14 +395,14 @@ class _PortfolioPageState extends State<PortfolioPage> {
                             ],
                           )
                         else ...[
-                          for (var i = 0; i < projects.length; i++)
+                          for (var i = 1; i < projects.length; i++)
                             Padding(
                               padding: EdgeInsets.only(
-                                left: i.isOdd ? 16 : 0,
-                                right: i.isEven ? 16 : 0,
-                                bottom: 45,
+                                left: i.isEven ? 14 : 0,
+                                right: i.isOdd ? 14 : 0,
+                                bottom: 48,
                               ),
-                              child: _project(i, 330),
+                              child: _project(i, 365),
                             ),
                         ],
                         const Divider(),
@@ -178,25 +419,22 @@ class _PortfolioPageState extends State<PortfolioPage> {
                           children: [
                             for (final p in additionalProjects)
                               ActionChip(
-                                avatar: Icon(p.$3, size: 17),
+                                avatar: ProjectIcon(
+                                  name: p.$1,
+                                  fallback: p.$3,
+                                  size: 32,
+                                ),
                                 label: Text(p.$1),
                                 backgroundColor: Colors.transparent,
                                 side: const BorderSide(
                                   color: Color(0xFFDEDDD7),
                                 ),
                                 padding: const EdgeInsets.all(10),
-                                onPressed: () => showDialog<void>(
-                                  context: context,
-                                  builder: (context) => AlertDialog(
-                                    title: Text(p.$1),
-                                    content: Text(p.$2),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () => Navigator.pop(context),
-                                        child: const Text('Close'),
-                                      ),
-                                    ],
-                                  ),
+                                onPressed: () => showProjectLinks(
+                                  context,
+                                  p.$1,
+                                  description: p.$2,
+                                  fallbackIcon: p.$3,
                                 ),
                               ),
                           ],
@@ -309,119 +547,114 @@ class _PortfolioPageState extends State<PortfolioPage> {
     final intro = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            Container(
-              width: 7,
-              height: 7,
-              decoration: const BoxDecoration(
-                color: violet,
-                shape: BoxShape.circle,
-              ),
-            ),
-            const SizedBox(width: 9),
-            Text('FLUTTER & iOS DEVELOPER', style: _eyebrow),
-          ],
+        Text('FLUTTER & NATIVE iOS · TEAM LEAD', style: _eyebrow),
+        const SizedBox(height: 25),
+        Text(
+          'Muhammad\nIkram Ul Haq.',
+          style: TextStyle(
+            fontSize: wide ? 72 : 46,
+            height: 1.03,
+            letterSpacing: -2.8,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        const SizedBox(height: 22),
+        Text(
+          'I build apps.\nAnd help teams build better.',
+          style: TextStyle(
+            fontSize: wide ? 28 : 23,
+            height: 1.3,
+            letterSpacing: -.6,
+            color: violet,
+          ),
+        ),
+        const SizedBox(height: 22),
+        ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 470),
+          child: const Text(
+            'From a first idea to a production release, I bring hands-on Flutter and iOS engineering, clear architecture, and ownership. I’ve delivered projects independently and led teams through several more.',
+            style: TextStyle(fontSize: 16, height: 1.75, color: muted),
+          ),
         ),
         const SizedBox(height: 28),
-        Text(
-          'Great ideas.\nBeautifully\nengineered.',
-          style: TextStyle(
-            fontSize: wide ? 78 : 53,
-            height: 1.02,
-            letterSpacing: wide ? -4.5 : -2.6,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        const SizedBox(height: 24),
-        const Text(
-          'I’m Ikram. I turn complex problems into intuitive\ndigital experiences — for mobile, web, and the\npeople who use them.',
-          style: TextStyle(color: muted, fontSize: 16, height: 1.8),
-        ),
-        const SizedBox(height: 30),
-        FilledButton(
-          onPressed: () => _go(_work),
-          style: FilledButton.styleFrom(
-            backgroundColor: ink,
-            padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 22),
-          ),
-          child: const Text('Explore my work     ↘'),
+        Wrap(
+          spacing: 16,
+          runSpacing: 12,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
+            FilledButton(
+              onPressed: () => _go(_work),
+              style: FilledButton.styleFrom(
+                backgroundColor: ink,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 25,
+                  vertical: 22,
+                ),
+              ),
+              child: const Text('View selected work ↘'),
+            ),
+            TextButton(
+              onPressed: () => _go(_contact),
+              child: const Text('Let’s connect ↗'),
+            ),
+          ],
         ),
         const SizedBox(height: 35),
         const Text(
-          'BASED IN ISLAMABAD, PAKISTAN',
-          style: TextStyle(fontSize: 9, letterSpacing: 1.8, color: muted),
+          'ISLAMABAD, PAKISTAN  /  MOBILE & WEB',
+          style: TextStyle(fontSize: 9, letterSpacing: 1.7, color: muted),
         ),
       ],
     );
-    final art = SizedBox(
-      height: wide ? 490 : 360,
+    final portrait = SizedBox(
+      height: wide ? 540 : 420,
       child: Stack(
-        clipBehavior: Clip.none,
         children: [
           Positioned.fill(
-            left: wide ? 20 : 0,
-            top: 30,
-            bottom: 30,
-            child: Transform.rotate(
-              angle: .035,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: const Color(0xFFE9E4F1),
-                  borderRadius: BorderRadius.circular(180),
-                ),
-                clipBehavior: Clip.antiAlias,
-                child: Image.asset(
-                  'assets/images/ikram.png',
-                  fit: BoxFit.cover,
-                  semanticLabel: 'Muhammad Ikram Ul Haq',
-                ),
-              ),
-            ),
-          ),
-          Positioned(
+            left: 20,
+            top: 0,
             right: 0,
-            top: 2,
-            child: Transform.rotate(
-              angle: .08,
-              child: Container(
-                padding: const EdgeInsets.all(17),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFE7EDCD),
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: const Text(
-                  'A little craft.\nA lot of care.',
-                  style: TextStyle(
-                    fontSize: 15,
-                    height: 1.3,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
+            bottom: 30,
+            child: Container(
+              decoration: BoxDecoration(
+                color: const Color(0xFFE4E0D8),
+                borderRadius: BorderRadius.circular(26),
+              ),
+              clipBehavior: Clip.antiAlias,
+              child: Image.asset(
+                'assets/images/ikram.png',
+                fit: BoxFit.cover,
+                alignment: Alignment.topCenter,
+                semanticLabel: 'Muhammad Ikram Ul Haq',
               ),
             ),
           ),
           Positioned(
             left: 0,
-            bottom: 4,
+            bottom: 0,
+            right: 30,
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 16),
+              padding: const EdgeInsets.all(23),
               decoration: BoxDecoration(
-                color: paper,
-                border: Border.all(color: const Color(0xFFDDD9E2)),
-                borderRadius: BorderRadius.circular(17),
+                color: ink,
+                borderRadius: BorderRadius.circular(18),
               ),
               child: const Row(
-                mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
                     '15+',
-                    style: TextStyle(fontSize: 32, fontWeight: FontWeight.w600),
+                    style: TextStyle(
+                      color: paper,
+                      fontSize: 37,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                  SizedBox(width: 13),
-                  Text(
-                    'apps contributed to\n& brought to life',
-                    style: TextStyle(fontSize: 11, color: muted),
+                  SizedBox(width: 18),
+                  Expanded(
+                    child: Text(
+                      'Apps built & contributed to\nAcross products, platforms, and teams.',
+                      style: TextStyle(color: paper, fontSize: 11, height: 1.6),
+                    ),
                   ),
                 ],
               ),
@@ -431,38 +664,38 @@ class _PortfolioPageState extends State<PortfolioPage> {
       ),
     );
     return Padding(
-      padding: EdgeInsets.only(top: wide ? 65 : 35, bottom: 35),
+      padding: EdgeInsets.only(top: wide ? 58 : 25, bottom: 25),
       child: Column(
         children: [
           if (wide)
             Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Expanded(flex: 6, child: intro),
-                const SizedBox(width: 30),
-                Expanded(flex: 5, child: art),
+                const SizedBox(width: 65),
+                Expanded(flex: 5, child: portrait),
               ],
             )
           else ...[
             intro,
             const SizedBox(height: 35),
-            art,
+            portrait,
           ],
-          const SizedBox(height: 70),
+          const SizedBox(height: 58),
           const Divider(),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 22),
+            padding: const EdgeInsets.symmetric(vertical: 20),
             child: Wrap(
+              spacing: wide ? 44 : 24,
+              runSpacing: 15,
               alignment: WrapAlignment.center,
-              spacing: wide ? 45 : 24,
-              runSpacing: 18,
               children: [
-                Text('THE TOOLKIT', style: _eyebrow),
                 for (final label in [
                   'Flutter',
                   'Dart',
                   'Native iOS',
-                  'Firebase',
                   'BLoC / Cubit',
+                  'Firebase',
                   'CI/CD',
                 ])
                   Text(
@@ -605,6 +838,20 @@ class _PortfolioPageState extends State<PortfolioPage> {
                     ),
                     if (project.link != null) ...[
                       const SizedBox(height: 18),
+                      FilledButton.icon(
+                        onPressed: () => showProjectLinks(
+                          context,
+                          project.name,
+                          fallback: project.link,
+                        ),
+                        icon: const Icon(Icons.open_in_new, size: 16),
+                        label: Text(
+                          project.name == 'Carpool'
+                              ? 'View on Google Play'
+                              : 'Visit project',
+                        ),
+                      ),
+                      const SizedBox(height: 12),
                       SelectableText(project.link!),
                       TextButton.icon(
                         onPressed: () => _copy(
@@ -618,9 +865,8 @@ class _PortfolioPageState extends State<PortfolioPage> {
                     ],
                     const SizedBox(height: 10),
                     Text(
-                      project.screens.isEmpty
-                          ? 'Visuals are concept previews, not original product screenshots.'
-                          : 'Product screenshots presented in portfolio mockups.',
+                      project.source ??
+                          'Product screenshots presented in portfolio mockups.',
                       style: TextStyle(fontSize: 11, color: muted),
                     ),
                   ],
@@ -666,18 +912,35 @@ class _PortfolioPageState extends State<PortfolioPage> {
     final experience = Column(
       children: [
         for (final role in [
-          ('Techtronix', 'Team Lead Flutter Developer', 'MAR 2024 — PRESENT'),
+          (
+            'Techtronix',
+            'Team Lead Flutter Developer',
+            'MAR 2024 — PRESENT',
+            'assets/images/company-techtronix.png',
+          ),
           (
             'AT-Tech',
             'Software Engineer · Flutter & iOS',
             'JUN 2022 — MAR 2024',
+            'assets/images/company-attech.png',
           ),
-          ('Heuristify', 'Flutter Developer', 'JAN 2022 — JUN 2022'),
-          ('SBS', 'Associate Software Engineer', 'NOV 2020 — JAN 2022'),
+          (
+            'Heuristify',
+            'Flutter Developer',
+            'JAN 2022 — JUN 2022',
+            'assets/images/company-heuristify.png',
+          ),
+          (
+            'SBS',
+            'Associate Software Engineer',
+            'NOV 2020 — JAN 2022',
+            'assets/images/company-sbs.png',
+          ),
           (
             'Independent',
-            'Freelance Mobile App Developer',
+            'Independent projects · Freelance developer',
             'AUG 2019 — SEP 2020',
+            'assets/images/ikram.png',
           ),
         ])
           Container(
@@ -686,29 +949,53 @@ class _PortfolioPageState extends State<PortfolioPage> {
             decoration: const BoxDecoration(
               border: Border(bottom: BorderSide(color: Color(0xFFDEDDD7))),
             ),
-            child: Column(
+            child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  role.$3,
-                  style: const TextStyle(
-                    fontSize: 9,
-                    letterSpacing: 1.1,
-                    color: muted,
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Container(
+                    width: 60,
+                    height: 60,
+                    color: Colors.white,
+                    child: Image.asset(
+                      role.$4,
+                      fit: role.$1 == 'Independent'
+                          ? BoxFit.cover
+                          : BoxFit.contain,
+                      semanticLabel:
+                          '${role.$1} ${role.$1 == 'Independent' ? 'portrait' : 'logo'}',
+                    ),
                   ),
                 ),
-                const SizedBox(height: 9),
-                Text(
-                  role.$1,
-                  style: const TextStyle(
-                    fontSize: 21,
-                    fontWeight: FontWeight.w600,
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        role.$3,
+                        style: const TextStyle(
+                          fontSize: 9,
+                          letterSpacing: 1.1,
+                          color: muted,
+                        ),
+                      ),
+                      const SizedBox(height: 9),
+                      Text(
+                        role.$1,
+                        style: const TextStyle(
+                          fontSize: 21,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        role.$2,
+                        style: const TextStyle(fontSize: 12, color: muted),
+                      ),
+                    ],
                   ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  role.$2,
-                  style: const TextStyle(fontSize: 12, color: muted),
                 ),
               ],
             ),
@@ -987,6 +1274,12 @@ class _ProjectTileState extends State<ProjectTile> {
             const SizedBox(height: 22),
             Row(
               children: [
+                ProjectIcon(
+                  name: widget.project.name,
+                  fallback: widget.project.icon,
+                  link: widget.project.link,
+                ),
+                const SizedBox(width: 12),
                 Expanded(
                   child: Text(
                     widget.project.name,
