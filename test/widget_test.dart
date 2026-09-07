@@ -5,6 +5,28 @@ import 'package:portfolio_flutter/portfolio_data.dart';
 import 'package:portfolio_flutter/screenshot_gallery.dart';
 
 void main() {
+  testWidgets('Header contacts and light/dark switch remain available', (
+    tester,
+  ) async {
+    await tester.pumpWidget(const MyApp());
+    await tester.pumpAndSettle();
+    for (final label in ['Email', 'GitHub', 'LinkedIn']) {
+      expect(find.byTooltip(label), findsOneWidget);
+    }
+    await tester.tap(find.byTooltip('Switch to dark mode'));
+    await tester.pumpAndSettle();
+    expect(
+      Theme.of(tester.element(find.byType(PortfolioPage))).brightness,
+      Brightness.dark,
+    );
+    await tester.tap(find.byTooltip('Switch to light mode'));
+    await tester.pumpAndSettle();
+    expect(
+      Theme.of(tester.element(find.byType(PortfolioPage))).brightness,
+      Brightness.light,
+    );
+  });
+
   testWidgets('Carbee collection expands and collapses', (tester) async {
     await tester.pumpWidget(
       MaterialApp(

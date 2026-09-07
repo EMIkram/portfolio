@@ -39,7 +39,7 @@ void showProjectLinks(
   showDialog<void>(
     context: context,
     builder: (dialogContext) => Dialog(
-      backgroundColor: paper,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       clipBehavior: Clip.antiAlias,
       insetPadding: const EdgeInsets.all(22),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
@@ -113,8 +113,8 @@ void showProjectLinks(
                     Text(
                       description ??
                           'Choose where you’d like to explore this product.',
-                      style: const TextStyle(
-                        color: muted,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
                         height: 1.6,
                         fontSize: 14,
                       ),
@@ -124,7 +124,9 @@ void showProjectLinks(
                       Padding(
                         padding: const EdgeInsets.only(bottom: 10),
                         child: Material(
-                          color: Colors.white,
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.surfaceContainerLow,
                           borderRadius: BorderRadius.circular(16),
                           child: InkWell(
                             borderRadius: BorderRadius.circular(16),
@@ -172,9 +174,11 @@ void showProjectLinks(
                                               : link.$1 == 'Google Play'
                                               ? 'View the Android app'
                                               : 'Visit the official site',
-                                          style: const TextStyle(
+                                          style: TextStyle(
                                             fontSize: 11,
-                                            color: muted,
+                                            color: Theme.of(
+                                              context,
+                                            ).colorScheme.onSurfaceVariant,
                                           ),
                                         ),
                                       ],
@@ -245,28 +249,46 @@ class ProjectIcon extends StatelessWidget {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  ThemeMode _mode = ThemeMode.light;
+  ThemeData _theme(Brightness brightness) => ThemeData(
+    useMaterial3: true,
+    brightness: brightness,
+    scaffoldBackgroundColor: brightness == Brightness.dark
+        ? const Color(0xFF151619)
+        : paper,
+    colorScheme: ColorScheme.fromSeed(
+      seedColor: violet,
+      brightness: brightness,
+      surface: brightness == Brightness.dark ? const Color(0xFF151619) : paper,
+    ),
+    fontFamily: 'Arial',
+    visualDensity: VisualDensity.compact,
+  );
   @override
   Widget build(BuildContext context) => MaterialApp(
     title: 'Ikram Ul Haq — Flutter & iOS Developer',
     debugShowCheckedModeBanner: false,
-    theme: ThemeData(
-      useMaterial3: true,
-      scaffoldBackgroundColor: paper,
-      colorScheme: ColorScheme.fromSeed(seedColor: violet, surface: paper),
-      fontFamily: 'Arial',
-      textTheme: const TextTheme(
-        bodyMedium: TextStyle(color: ink, height: 1.5),
-      ),
-      dividerColor: const Color(0xFFE2E0DA),
+    theme: _theme(Brightness.light),
+    darkTheme: _theme(Brightness.dark),
+    themeMode: _mode,
+    home: PortfolioPage(
+      onToggleTheme: () => setState(() {
+        _mode = _mode == ThemeMode.dark ? ThemeMode.light : ThemeMode.dark;
+      }),
     ),
-    home: const PortfolioPage(),
   );
 }
 
 class PortfolioPage extends StatefulWidget {
-  const PortfolioPage({super.key});
+  const PortfolioPage({super.key, this.onToggleTheme});
+  final VoidCallback? onToggleTheme;
   @override
   State<PortfolioPage> createState() => _PortfolioPageState();
 }
@@ -309,7 +331,7 @@ class _PortfolioPageState extends State<PortfolioPage> {
               controller: _scroll,
               child: Center(
                 child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 1760),
+                  constraints: const BoxConstraints(maxWidth: 1480),
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: padding),
                     child: Column(
@@ -317,7 +339,7 @@ class _PortfolioPageState extends State<PortfolioPage> {
                       children: [
                         _nav(wide),
                         _hero(wide),
-                        const SizedBox(height: 65),
+                        const SizedBox(height: 36),
                         _sectionLabel(
                           '01 / SELECTED WORK',
                           'A few things I’ve helped bring to life.',
@@ -325,86 +347,54 @@ class _PortfolioPageState extends State<PortfolioPage> {
                         ),
                         const SizedBox(height: 30),
                         Text(
-                          'Real products.\nMeaningful contributions.',
+                          'Selected products. Real-world impact.',
                           style: TextStyle(
-                            fontSize: wide ? 56 : 38,
+                            fontSize: wide ? 32 : 28,
                             height: 1.07,
                             letterSpacing: -2.2,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
                         const SizedBox(height: 14),
-                        const Text(
+                        Text(
                           'Web platforms, shared journeys, and everyday healthcare.\nA selection of the products I’ve helped build.',
                           style: TextStyle(
-                            color: muted,
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.onSurfaceVariant,
                             fontSize: 16,
                             height: 1.7,
                           ),
                         ),
-                        const SizedBox(height: 45),
-                        _project(
-                          0,
-                          wide
-                              ? ((constraints.maxWidth - padding * 2) * .4)
-                                    .clamp(470, 660)
-                              : 300,
-                        ),
+                        const SizedBox(height: 24),
+                        _project(0, wide ? 340 : 230),
                         const SizedBox(height: 32),
                         CarbeeScreenWall(project: projects.first),
-                        const SizedBox(height: 65),
-                        if (wide)
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                flex: 11,
-                                child: Column(
-                                  children: [
-                                    for (final index in [1, 3, 5])
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                          bottom: 80,
-                                        ),
-                                        child: _project(
-                                          index,
-                                          index == 1 ? 520 : 470,
-                                        ),
-                                      ),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(width: 65),
-                              Expanded(
-                                flex: 9,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(top: 145),
-                                  child: Column(
-                                    children: [
-                                      for (final index in [2, 4, 6])
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                            bottom: 80,
-                                          ),
-                                          child: _project(index, 460),
-                                        ),
-                                    ],
+                        const SizedBox(height: 36),
+                        LayoutBuilder(
+                          builder: (context, bounds) {
+                            final columns = bounds.maxWidth >= 1100
+                                ? 3
+                                : bounds.maxWidth >= 650
+                                ? 2
+                                : 1;
+                            final width =
+                                (bounds.maxWidth - (columns - 1) * 24) /
+                                columns;
+                            return Wrap(
+                              spacing: 24,
+                              runSpacing: 32,
+                              children: [
+                                for (var i = 1; i < projects.length; i++)
+                                  SizedBox(
+                                    width: width,
+                                    child: _project(i, 270),
                                   ),
-                                ),
-                              ),
-                            ],
-                          )
-                        else ...[
-                          for (var i = 1; i < projects.length; i++)
-                            Padding(
-                              padding: EdgeInsets.only(
-                                left: i.isEven ? 14 : 0,
-                                right: i.isOdd ? 14 : 0,
-                                bottom: 48,
-                              ),
-                              child: _project(i, 365),
-                            ),
-                        ],
+                              ],
+                            );
+                          },
+                        ),
+                        const SizedBox(height: 36),
                         const Divider(),
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 28),
@@ -439,9 +429,9 @@ class _PortfolioPageState extends State<PortfolioPage> {
                               ),
                           ],
                         ),
-                        const SizedBox(height: 110),
+                        const SizedBox(height: 60),
                         _aboutSection(wide),
-                        const SizedBox(height: 100),
+                        const SizedBox(height: 60),
                         _contactSection(wide),
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 30),
@@ -450,13 +440,23 @@ class _PortfolioPageState extends State<PortfolioPage> {
                             spacing: 45,
                             runSpacing: 12,
                             children: [
-                              const Text(
+                              Text(
                                 '© Muhammad Ikram Ul Haq',
-                                style: TextStyle(fontSize: 12, color: muted),
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSurfaceVariant,
+                                ),
                               ),
-                              const Text(
+                              Text(
                                 'Built with Flutter. Made with intention.',
-                                style: TextStyle(fontSize: 12, color: muted),
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSurfaceVariant,
+                                ),
                               ),
                               TextButton(
                                 onPressed: () => _scroll.animateTo(
@@ -484,61 +484,69 @@ class _PortfolioPageState extends State<PortfolioPage> {
     ),
   );
 
-  TextStyle get _eyebrow => const TextStyle(
+  TextStyle get _eyebrow => TextStyle(
     fontSize: 10,
     letterSpacing: 2,
     fontWeight: FontWeight.w600,
-    color: muted,
+    color: Theme.of(context).colorScheme.onSurfaceVariant,
   );
 
+  void _openContact(String url) {
+    if (!openExternalLink(url)) _copy(context, url, 'Contact link copied');
+  }
+
   Widget _nav(bool wide) => Padding(
-    padding: const EdgeInsets.symmetric(vertical: 28),
-    child: Row(
+    padding: const EdgeInsets.symmetric(vertical: 14),
+    child: Wrap(
+      alignment: WrapAlignment.spaceBetween,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      spacing: 16,
+      runSpacing: 8,
       children: [
-        Container(
-          width: 37,
-          height: 37,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: ink,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: const Text(
-            'i.',
-            style: TextStyle(
-              color: paper,
-              fontSize: 25,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+        const Text(
+          'ikram ul haq.',
+          style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18),
         ),
-        if (wide) ...[
-          const SizedBox(width: 12),
-          const Text(
-            'ikram ul haq',
-            style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
-          ),
-        ],
-        const Spacer(),
-        TextButton(onPressed: () => _go(_work), child: const Text('Work')),
-        TextButton(onPressed: () => _go(_about), child: const Text('About')),
-        const SizedBox(width: 10),
-        if (!wide)
-          IconButton(
-            onPressed: () => _go(_contact),
-            tooltip: 'Let’s talk',
-            icon: const Icon(Icons.north_east),
-          ),
-        if (wide)
-          OutlinedButton(
-            onPressed: () => _go(_contact),
-            style: OutlinedButton.styleFrom(
-              foregroundColor: ink,
-              side: const BorderSide(color: Color(0xFFCBC9C3)),
-              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 17),
+        Wrap(
+          crossAxisAlignment: WrapCrossAlignment.center,
+          spacing: 2,
+          children: [
+            TextButton(onPressed: () => _go(_work), child: const Text('Work')),
+            TextButton(
+              onPressed: () => _go(_about),
+              child: const Text('About'),
             ),
-            child: const Text('Let’s talk ↗'),
-          ),
+            IconButton(
+              tooltip: 'Email',
+              onPressed: () => _openContact('mailto:emikramulhaq@gmail.com'),
+              icon: const Icon(Icons.mail_outline, size: 19),
+            ),
+            IconButton(
+              tooltip: 'GitHub',
+              onPressed: () => _openContact('https://github.com/EMIkram'),
+              icon: const Icon(Icons.code, size: 19),
+            ),
+            IconButton(
+              tooltip: 'LinkedIn',
+              onPressed: () => _openContact(
+                'https://www.linkedin.com/in/em-ikram-a718a9145/',
+              ),
+              icon: const Icon(Icons.work_outline, size: 19),
+            ),
+            IconButton(
+              tooltip: Theme.of(context).brightness == Brightness.dark
+                  ? 'Switch to light mode'
+                  : 'Switch to dark mode',
+              onPressed: widget.onToggleTheme,
+              icon: Icon(
+                Theme.of(context).brightness == Brightness.dark
+                    ? Icons.light_mode_outlined
+                    : Icons.dark_mode_outlined,
+                size: 19,
+              ),
+            ),
+          ],
+        ),
       ],
     ),
   );
@@ -552,7 +560,7 @@ class _PortfolioPageState extends State<PortfolioPage> {
         Text(
           'Muhammad\nIkram Ul Haq.',
           style: TextStyle(
-            fontSize: wide ? 72 : 46,
+            fontSize: wide ? 46 : 36,
             height: 1.03,
             letterSpacing: -2.8,
             fontWeight: FontWeight.w700,
@@ -562,7 +570,7 @@ class _PortfolioPageState extends State<PortfolioPage> {
         Text(
           'I build apps.\nAnd help teams build better.',
           style: TextStyle(
-            fontSize: wide ? 28 : 23,
+            fontSize: wide ? 22 : 20,
             height: 1.3,
             letterSpacing: -.6,
             color: violet,
@@ -571,9 +579,13 @@ class _PortfolioPageState extends State<PortfolioPage> {
         const SizedBox(height: 22),
         ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 470),
-          child: const Text(
+          child: Text(
             'From a first idea to a production release, I bring hands-on Flutter and iOS engineering, clear architecture, and ownership. I’ve delivered projects independently and led teams through several more.',
-            style: TextStyle(fontSize: 16, height: 1.75, color: muted),
+            style: TextStyle(
+              fontSize: 14,
+              height: 1.6,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
           ),
         ),
         const SizedBox(height: 28),
@@ -586,6 +598,7 @@ class _PortfolioPageState extends State<PortfolioPage> {
               onPressed: () => _go(_work),
               style: FilledButton.styleFrom(
                 backgroundColor: ink,
+                foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(
                   horizontal: 25,
                   vertical: 22,
@@ -600,14 +613,18 @@ class _PortfolioPageState extends State<PortfolioPage> {
           ],
         ),
         const SizedBox(height: 35),
-        const Text(
+        Text(
           'ISLAMABAD, PAKISTAN  /  MOBILE & WEB',
-          style: TextStyle(fontSize: 9, letterSpacing: 1.7, color: muted),
+          style: TextStyle(
+            fontSize: 9,
+            letterSpacing: 1.7,
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
         ),
       ],
     );
     final portrait = SizedBox(
-      height: wide ? 540 : 420,
+      height: wide ? 310 : 270,
       child: Stack(
         children: [
           Positioned.fill(
@@ -645,7 +662,7 @@ class _PortfolioPageState extends State<PortfolioPage> {
                     '15+',
                     style: TextStyle(
                       color: paper,
-                      fontSize: 37,
+                      fontSize: 28,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -664,7 +681,7 @@ class _PortfolioPageState extends State<PortfolioPage> {
       ),
     );
     return Padding(
-      padding: EdgeInsets.only(top: wide ? 58 : 25, bottom: 25),
+      padding: EdgeInsets.only(top: wide ? 24 : 16, bottom: 25),
       child: Column(
         children: [
           if (wide)
@@ -673,15 +690,15 @@ class _PortfolioPageState extends State<PortfolioPage> {
               children: [
                 Expanded(flex: 6, child: intro),
                 const SizedBox(width: 65),
-                Expanded(flex: 5, child: portrait),
+                SizedBox(width: 310, child: portrait),
               ],
             )
           else ...[
             intro,
             const SizedBox(height: 35),
-            portrait,
+            SizedBox(width: 310, child: portrait),
           ],
-          const SizedBox(height: 58),
+          const SizedBox(height: 28),
           const Divider(),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 20),
@@ -700,9 +717,9 @@ class _PortfolioPageState extends State<PortfolioPage> {
                 ])
                   Text(
                     label,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 13,
-                      color: muted,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -724,7 +741,13 @@ class _PortfolioPageState extends State<PortfolioPage> {
       runSpacing: 10,
       children: [
         Text(label, style: _eyebrow),
-        Text(trailing, style: const TextStyle(fontSize: 11, color: muted)),
+        Text(
+          trailing,
+          style: TextStyle(
+            fontSize: 11,
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
+        ),
       ],
     ),
   );
@@ -816,8 +839,10 @@ class _PortfolioPageState extends State<PortfolioPage> {
                               const SizedBox(height: 5),
                               Text(
                                 highlight.$2,
-                                style: const TextStyle(
-                                  color: muted,
+                                style: TextStyle(
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSurfaceVariant,
                                   height: 1.6,
                                 ),
                               ),
@@ -867,7 +892,10 @@ class _PortfolioPageState extends State<PortfolioPage> {
                     Text(
                       project.source ??
                           'Product screenshots presented in portfolio mockups.',
-                      style: TextStyle(fontSize: 11, color: muted),
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
                     ),
                   ],
                 ),
@@ -886,26 +914,38 @@ class _PortfolioPageState extends State<PortfolioPage> {
         Text(
           'A developer’s mind.\nA craftsperson’s care.',
           style: TextStyle(
-            fontSize: wide ? 45 : 35,
+            fontSize: wide ? 32 : 28,
             letterSpacing: -1.8,
             height: 1.12,
             fontWeight: FontWeight.w600,
           ),
         ),
         const SizedBox(height: 24),
-        const Text(
+        Text(
           'I’m Muhammad Ikram Ul Haq, a Flutter developer with native iOS experience. I’ve independently completed several projects from start to finish and led teams to deliver several more. Across startups, product teams, and service companies, I bring hands-on engineering and the leadership to help teams ship with confidence.',
-          style: TextStyle(fontSize: 16, height: 1.8, color: muted),
+          style: TextStyle(
+            fontSize: 16,
+            height: 1.8,
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
         ),
         const SizedBox(height: 18),
-        const Text(
+        Text(
           'My focus is clean architecture, intuitive interfaces, and the engineering behind them: reliable integrations, maintainable code, and thoughtful release workflows.',
-          style: TextStyle(fontSize: 16, height: 1.8, color: muted),
+          style: TextStyle(
+            fontSize: 16,
+            height: 1.8,
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
         ),
         const SizedBox(height: 28),
-        const Text(
+        Text(
           'BS Computer Science · Federal Urdu University\n2016–2020 · CGPA 3.59',
-          style: TextStyle(fontSize: 12, height: 1.8, color: muted),
+          style: TextStyle(
+            fontSize: 12,
+            height: 1.8,
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
         ),
       ],
     );
@@ -975,10 +1015,10 @@ class _PortfolioPageState extends State<PortfolioPage> {
                     children: [
                       Text(
                         role.$3,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 9,
                           letterSpacing: 1.1,
-                          color: muted,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
                       ),
                       const SizedBox(height: 9),
@@ -992,7 +1032,10 @@ class _PortfolioPageState extends State<PortfolioPage> {
                       const SizedBox(height: 4),
                       Text(
                         role.$2,
-                        style: const TextStyle(fontSize: 12, color: muted),
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
                       ),
                     ],
                   ),
@@ -1052,7 +1095,7 @@ class _PortfolioPageState extends State<PortfolioPage> {
         Text(
           'Have something\ngood in mind?',
           style: TextStyle(
-            fontSize: wide ? 65 : 39,
+            fontSize: wide ? 38 : 30,
             height: 1.05,
             letterSpacing: -2,
             fontWeight: FontWeight.w500,
@@ -1284,7 +1327,7 @@ class _ProjectTileState extends State<ProjectTile> {
                   child: Text(
                     widget.project.name,
                     style: const TextStyle(
-                      fontSize: 25,
+                      fontSize: 20,
                       letterSpacing: -.7,
                       fontWeight: FontWeight.w600,
                     ),
@@ -1292,22 +1335,28 @@ class _ProjectTileState extends State<ProjectTile> {
                 ),
                 Text(
                   '0${widget.index + 1}',
-                  style: const TextStyle(fontSize: 11, color: muted),
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
                 ),
               ],
             ),
             const SizedBox(height: 6),
             Text(
               widget.project.summary,
-              style: const TextStyle(fontSize: 14, color: muted),
+              style: TextStyle(
+                fontSize: 14,
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
             ),
             const SizedBox(height: 12),
             Text(
               widget.project.category,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 9,
                 letterSpacing: 1.6,
-                color: muted,
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
             ),
           ],
