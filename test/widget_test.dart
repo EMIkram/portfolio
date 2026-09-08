@@ -26,6 +26,8 @@ void main() {
   ) async {
     await tester.pumpWidget(const MyApp());
     await tester.pumpAndSettle();
+    expect(find.text('Download resume'), findsOneWidget);
+    expect(resumeUrl, isNotEmpty);
     for (final label in ['Email', 'GitHub', 'LinkedIn']) {
       expect(find.byTooltip(label), findsOneWidget);
     }

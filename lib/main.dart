@@ -11,6 +11,12 @@ const paper = Color(0xFFF8F7F3);
 const violet = Color(0xFF7150CF);
 const muted = Color(0xFF74736F);
 
+const resumeUrl = String.fromEnvironment(
+  'RESUME_URL',
+  defaultValue:
+      'https://drive.google.com/file/d/1-su7EF3lNartuOpBkB9nnWH1Z-wMkcnp/view?usp=sharing',
+);
+
 void main() => runApp(const MyApp());
 
 void showProjectLinks(
@@ -367,6 +373,8 @@ class _PortfolioPageState extends State<PortfolioPage> {
                           ),
                         ),
                         const SizedBox(height: 24),
+                        _project(2, 280),
+                        const SizedBox(height: 32),
                         _project(0, wide ? 340 : 230),
                         const SizedBox(height: 32),
                         CarbeeScreenWall(project: projects.first),
@@ -385,7 +393,7 @@ class _PortfolioPageState extends State<PortfolioPage> {
                               spacing: 24,
                               runSpacing: 32,
                               children: [
-                                for (var i = 1; i < projects.length; i++)
+                                for (final i in [1, 3, 4, 5, 6])
                                   SizedBox(
                                     width: width,
                                     child: _project(i, 270),
@@ -516,6 +524,11 @@ class _PortfolioPageState extends State<PortfolioPage> {
               onPressed: () => _go(_about),
               child: const Text('About'),
             ),
+            TextButton.icon(
+              onPressed: () => _openContact(resumeUrl),
+              icon: const Icon(Icons.download_outlined, size: 18),
+              label: const Text('Download resume'),
+            ),
             IconButton(
               tooltip: 'Email',
               onPressed: () => _openContact('mailto:emikramulhaq@gmail.com'),
@@ -576,7 +589,7 @@ class _PortfolioPageState extends State<PortfolioPage> {
     final intro = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('FLUTTER & NATIVE iOS · TEAM LEAD', style: _eyebrow),
+        Text('MOBILE ENGINEER · iOS & ANDROID', style: _eyebrow),
         const SizedBox(height: 25),
         Text(
           'Muhammad\nIkram Ul Haq.',
@@ -589,7 +602,7 @@ class _PortfolioPageState extends State<PortfolioPage> {
         ),
         const SizedBox(height: 22),
         Text(
-          'I build apps.\nAnd help teams build better.',
+          'Production mobile apps.\nHands-on engineering and team leadership.',
           style: TextStyle(
             fontSize: wide ? 22 : 20,
             height: 1.3,
@@ -601,7 +614,7 @@ class _PortfolioPageState extends State<PortfolioPage> {
         ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 470),
           child: Text(
-            'From a first idea to a production release, I bring hands-on Flutter and iOS engineering, clear architecture, and ownership. I’ve delivered projects independently and led teams through several more.',
+            'I build and maintain applications with Flutter and native iOS using Swift and UIKit. My work spans healthcare, automotive platforms, and AI-related products, with ownership from API integration and architecture through release. Based in Islamabad and available for remote opportunities.',
             style: TextStyle(
               fontSize: 14,
               height: 1.6,
@@ -731,12 +744,15 @@ class _PortfolioPageState extends State<PortfolioPage> {
                 for (final label in [
                   'Flutter',
                   'Dart',
-                  'Native iOS',
+                  'Swift / UIKit',
+                  'iOS concurrency',
+                  'REST APIs / JSON',
                   'BLoC / Cubit',
                   'Firebase',
                   'CI/CD',
                   'AI-assisted development',
-                  'AI feature integration',
+                  'Spec-driven development',
+                  'Google ML Kit',
                 ])
                   Text(
                     label,
@@ -1279,36 +1295,6 @@ class _ProjectTileState extends State<ProjectTile> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (widget.project.name == 'Carbee') ...[
-              Row(
-                children: [
-                  ProjectIcon(
-                    name: widget.project.name,
-                    fallback: widget.project.icon,
-                    link: widget.project.link,
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      widget.project.name,
-                      style: const TextStyle(
-                        fontSize: 20,
-                        letterSpacing: 0,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                  Text(
-                    '0${widget.index + 1}',
-                    style: TextStyle(
-                      fontSize: 11,
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-            ],
             MouseRegion(
               onEnter: (_) => setState(() => _hovered = true),
               onExit: (_) => setState(() => _hovered = false),
@@ -1368,34 +1354,33 @@ class _ProjectTileState extends State<ProjectTile> {
               ),
             ),
             const SizedBox(height: 22),
-            if (widget.project.name != 'Carbee')
-              Row(
-                children: [
-                  ProjectIcon(
-                    name: widget.project.name,
-                    fallback: widget.project.icon,
-                    link: widget.project.link,
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      widget.project.name,
-                      style: const TextStyle(
-                        fontSize: 20,
-                        letterSpacing: 0,
-                        fontWeight: FontWeight.w600,
-                      ),
+            Row(
+              children: [
+                ProjectIcon(
+                  name: widget.project.name,
+                  fallback: widget.project.icon,
+                  link: widget.project.link,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    widget.project.name,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      letterSpacing: 0,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
-                  Text(
-                    '0${widget.index + 1}',
-                    style: TextStyle(
-                      fontSize: 11,
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
+                ),
+                Text(
+                  '0${widget.index + 1}',
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
-                ],
-              ),
+                ),
+              ],
+            ),
             const SizedBox(height: 6),
             Text(
               widget.project.summary,

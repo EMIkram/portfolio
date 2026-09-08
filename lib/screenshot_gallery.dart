@@ -183,12 +183,38 @@ class ScreenshotComposition extends StatelessWidget {
                           ],
                         ),
                         clipBehavior: Clip.antiAlias,
-                        child: ScreenshotImage(
-                          project.screens[i].$2,
-                          fit: BoxFit.contain,
-                          semanticLabel:
-                              '${project.name} — ${project.screens[i].$1}',
-                        ),
+                        child: project.name == 'Dr.iQ' && i > 0
+                            ? FittedBox(
+                                fit: BoxFit.contain,
+                                child: SizedBox(
+                                  width: 193,
+                                  height: 423,
+                                  child: ClipRect(
+                                    child: Stack(
+                                      children: [
+                                        Positioned(
+                                          left: -75,
+                                          top: -137,
+                                          width: 340,
+                                          height: 605,
+                                          child: ScreenshotImage(
+                                            project.screens[i].$2,
+                                            fit: BoxFit.fill,
+                                            semanticLabel:
+                                                project.screens[i].$1,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : ScreenshotImage(
+                                project.screens[i].$2,
+                                fit: BoxFit.contain,
+                                semanticLabel:
+                                    '${project.name} — ${project.screens[i].$1}',
+                              ),
                       ),
                     ),
                   ),

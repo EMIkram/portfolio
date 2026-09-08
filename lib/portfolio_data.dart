@@ -243,10 +243,10 @@ const projects = [
     'Carpool',
     'MOBILITY · ANDROID',
     'Shared journeys. Better connections.',
-    'Contributed to Carpool, a significant project in my mobile development work. The app connects drivers offering available seats with riders looking for suitable journeys.',
+    'Independently developed and maintain Carpool, a live Flutter/Android product connecting drivers and riders. I use it to apply AI-agent-assisted, spec-driven development across requirements, architecture, implementation, release, and iteration.',
     Color(0xFFD5EDE7),
     Icons.route_rounded,
-    ['Mobile development', 'Carpooling', 'Travel'],
+    ['Flutter', 'Android', 'Independent delivery', 'AI-assisted development'],
     mobile: true,
     link:
         'https://play.google.com/store/apps/details?id=com.carpoolingpk.carpool&hl=en',
@@ -268,7 +268,7 @@ const projects = [
     'Collaborated with the iOS team at AT-Tech on features and modules for a UK healthcare product serving NHS patients. Contributed to refactoring approximately 90% of the codebase for cleaner architecture.',
     Color(0xFFDCE5FB),
     Icons.favorite_rounded,
-    ['Native iOS', 'Healthcare', 'Refactoring'],
+    ['Swift', 'UIKit', 'Native iOS', 'App Store delivery'],
     mobile: true,
     link: 'https://apps.apple.com/pk/app/dr-iq/id1345802108',
     source:
