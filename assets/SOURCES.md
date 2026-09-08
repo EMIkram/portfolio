@@ -25,3 +25,6 @@ Product screenshots remain the property of their respective owners and are used 
 - Heuristify and Softech Business Services: logos from their respective public LinkedIn company pages, /company/heuristify and /company/softech-business-services-ltd.
 - Independent work uses Ikram's supplied portrait.
 - Additional Carbee customer welcome, selling, AiBee, and video-feed screenshots supplied by Ikram on 7 September 2026; included alongside the earlier mobile, portal, and Foundation images.
+
+- AT-Tech logo replaced with the user-provided original, September 8, 2026.
+- GitHub header mark: https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png

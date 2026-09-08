@@ -5,6 +5,22 @@ import 'package:portfolio_flutter/portfolio_data.dart';
 import 'package:portfolio_flutter/screenshot_gallery.dart';
 
 void main() {
+  testWidgets('Failed screenshot offers retry instead of a blank preview', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: Scaffold(body: ScreenshotImage('missing-screenshot.png')),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('Retry screenshot'), findsOneWidget);
+    await tester.tap(find.text('Retry screenshot'));
+    await tester.pumpAndSettle();
+    expect(find.text('Retry screenshot'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('Header contacts and light/dark switch remain available', (
     tester,
   ) async {

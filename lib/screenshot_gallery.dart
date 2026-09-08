@@ -144,7 +144,7 @@ class ScreenshotComposition extends StatelessWidget {
       ],
     ),
     clipBehavior: Clip.antiAlias,
-    child: Image.asset(
+    child: ScreenshotImage(
       screen.$2,
       fit: BoxFit.contain,
       semanticLabel: screen.$1,
@@ -183,7 +183,7 @@ class ScreenshotComposition extends StatelessWidget {
                           ],
                         ),
                         clipBehavior: Clip.antiAlias,
-                        child: Image.asset(
+                        child: ScreenshotImage(
                           project.screens[i].$2,
                           fit: BoxFit.contain,
                           semanticLabel:
@@ -339,7 +339,7 @@ class CarbeeScreenWall extends StatelessWidget {
                                           ? SizedBox(
                                               height: columns == 4 ? 310 : 250,
                                               width: double.infinity,
-                                              child: Image.asset(
+                                              child: ScreenshotImage(
                                                 project
                                                     .screens[order[position]]
                                                     .$2,
@@ -433,14 +433,10 @@ class BrowserFrame extends StatelessWidget {
               ],
             ),
           ),
-          Image.asset(
+          ScreenshotImage(
             screen.$2,
             fit: BoxFit.contain,
             semanticLabel: screen.$1,
-            errorBuilder: (context, error, stack) => const SizedBox(
-              height: 170,
-              child: Center(child: Text('Preview unavailable')),
-            ),
           ),
         ],
       ),
@@ -497,7 +493,7 @@ class _ScreenshotGalleryState extends State<ScreenshotGallery> {
               ? SizedBox(
                   height: 420,
                   width: double.infinity,
-                  child: Image.asset(
+                  child: ScreenshotImage(
                     widget.project.screens[_selected].$2,
                     fit: BoxFit.contain,
                     semanticLabel: widget.project.screens[_selected].$1,
@@ -545,7 +541,7 @@ class _ScreenshotGalleryState extends State<ScreenshotGallery> {
                 minScale: .5,
                 maxScale: 5,
                 child: Center(
-                  child: Image.asset(
+                  child: ScreenshotImage(
                     widget.project.screens[_selected].$2,
                     fit: BoxFit.contain,
                   ),
@@ -560,6 +556,54 @@ class _ScreenshotGalleryState extends State<ScreenshotGallery> {
               ),
             ),
           ],
+        ),
+      ),
+    ),
+  );
+}
+
+/// Keeps loading and failed requests distinct, and allows a failed asset to retry.
+class ScreenshotImage extends StatefulWidget {
+  const ScreenshotImage(this.path, {super.key, this.fit, this.semanticLabel});
+  final String path;
+  final BoxFit? fit;
+  final String? semanticLabel;
+  @override
+  State<ScreenshotImage> createState() => _ScreenshotImageState();
+}
+
+class _ScreenshotImageState extends State<ScreenshotImage> {
+  int _attempt = 0;
+  Future<void> _retry() async {
+    await AssetImage(widget.path).evict();
+    if (mounted) setState(() => _attempt++);
+  }
+
+  @override
+  Widget build(BuildContext context) => Image.asset(
+    widget.path,
+    key: ValueKey('${widget.path}:$_attempt'),
+    fit: widget.fit,
+    semanticLabel: widget.semanticLabel,
+    frameBuilder: (context, child, frame, synchronous) =>
+        frame != null || synchronous
+        ? child
+        : const SizedBox(
+            height: 170,
+            child: Center(
+              child: Text(
+                'Loading screenshot...',
+                style: TextStyle(color: Colors.black54, fontSize: 12),
+              ),
+            ),
+          ),
+    errorBuilder: (context, error, stack) => SizedBox(
+      height: 170,
+      child: Center(
+        child: TextButton.icon(
+          onPressed: _retry,
+          icon: const Icon(Icons.refresh),
+          label: const Text('Retry screenshot'),
         ),
       ),
     ),

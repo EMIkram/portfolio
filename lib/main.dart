@@ -351,7 +351,7 @@ class _PortfolioPageState extends State<PortfolioPage> {
                           style: TextStyle(
                             fontSize: wide ? 32 : 28,
                             height: 1.07,
-                            letterSpacing: -2.2,
+                            letterSpacing: 0,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -524,14 +524,35 @@ class _PortfolioPageState extends State<PortfolioPage> {
             IconButton(
               tooltip: 'GitHub',
               onPressed: () => _openContact('https://github.com/EMIkram'),
-              icon: const Icon(Icons.code, size: 19),
+              icon: Image.asset(
+                'assets/images/github-mark.png',
+                width: 20,
+                height: 20,
+              ),
             ),
             IconButton(
               tooltip: 'LinkedIn',
               onPressed: () => _openContact(
                 'https://www.linkedin.com/in/em-ikram-a718a9145/',
               ),
-              icon: const Icon(Icons.work_outline, size: 19),
+              icon: Container(
+                width: 19,
+                height: 19,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.onSurface,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+                child: Text(
+                  'in',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.surface,
+                    fontWeight: FontWeight.w900,
+                    fontSize: 15,
+                    height: 1,
+                  ),
+                ),
+              ),
             ),
             IconButton(
               tooltip: Theme.of(context).brightness == Brightness.dark
@@ -562,7 +583,7 @@ class _PortfolioPageState extends State<PortfolioPage> {
           style: TextStyle(
             fontSize: wide ? 46 : 36,
             height: 1.03,
-            letterSpacing: -2.8,
+            letterSpacing: 0,
             fontWeight: FontWeight.w700,
           ),
         ),
@@ -572,7 +593,7 @@ class _PortfolioPageState extends State<PortfolioPage> {
           style: TextStyle(
             fontSize: wide ? 22 : 20,
             height: 1.3,
-            letterSpacing: -.6,
+            letterSpacing: 0,
             color: violet,
           ),
         ),
@@ -714,6 +735,8 @@ class _PortfolioPageState extends State<PortfolioPage> {
                   'BLoC / Cubit',
                   'Firebase',
                   'CI/CD',
+                  'AI-assisted development',
+                  'AI feature integration',
                 ])
                   Text(
                     label,
@@ -915,7 +938,7 @@ class _PortfolioPageState extends State<PortfolioPage> {
           'A developer’s mind.\nA craftsperson’s care.',
           style: TextStyle(
             fontSize: wide ? 32 : 28,
-            letterSpacing: -1.8,
+            letterSpacing: 0,
             height: 1.12,
             fontWeight: FontWeight.w600,
           ),
@@ -1097,7 +1120,7 @@ class _PortfolioPageState extends State<PortfolioPage> {
           style: TextStyle(
             fontSize: wide ? 38 : 30,
             height: 1.05,
-            letterSpacing: -2,
+            letterSpacing: 0,
             fontWeight: FontWeight.w500,
             color: paper,
           ),
@@ -1256,6 +1279,36 @@ class _ProjectTileState extends State<ProjectTile> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            if (widget.project.name == 'Carbee') ...[
+              Row(
+                children: [
+                  ProjectIcon(
+                    name: widget.project.name,
+                    fallback: widget.project.icon,
+                    link: widget.project.link,
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      widget.project.name,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        letterSpacing: 0,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  Text(
+                    '0${widget.index + 1}',
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+            ],
             MouseRegion(
               onEnter: (_) => setState(() => _hovered = true),
               onExit: (_) => setState(() => _hovered = false),
@@ -1315,33 +1368,34 @@ class _ProjectTileState extends State<ProjectTile> {
               ),
             ),
             const SizedBox(height: 22),
-            Row(
-              children: [
-                ProjectIcon(
-                  name: widget.project.name,
-                  fallback: widget.project.icon,
-                  link: widget.project.link,
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    widget.project.name,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      letterSpacing: -.7,
-                      fontWeight: FontWeight.w600,
+            if (widget.project.name != 'Carbee')
+              Row(
+                children: [
+                  ProjectIcon(
+                    name: widget.project.name,
+                    fallback: widget.project.icon,
+                    link: widget.project.link,
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      widget.project.name,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        letterSpacing: 0,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
-                ),
-                Text(
-                  '0${widget.index + 1}',
-                  style: TextStyle(
-                    fontSize: 11,
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  Text(
+                    '0${widget.index + 1}',
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              ),
             const SizedBox(height: 6),
             Text(
               widget.project.summary,
