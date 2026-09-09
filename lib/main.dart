@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'portfolio_data.dart';
+import 'portfolio_visuals.dart';
 import 'project_artwork.dart';
 import 'screenshot_gallery.dart';
 import 'external_link.dart'
     if (dart.library.js_interop) 'external_link_web.dart';
 
 const ink = Color(0xFF25252A);
-const paper = Color(0xFFF8F7F3);
+const paper = Color(0xFFF7F8FC);
 const violet = Color(0xFF7150CF);
 const muted = Color(0xFF74736F);
 
 const resumeUrl = String.fromEnvironment(
   'RESUME_URL',
   defaultValue:
-      'https://drive.google.com/file/d/1-su7EF3lNartuOpBkB9nnWH1Z-wMkcnp/view?usp=sharing',
+      'https://drive.google.com/file/d/10GP3VnKlMdyDxZknQBZbJivAEX3EqwNl/view?usp=sharing',
 );
 
 void main() => runApp(const MyApp());
@@ -303,7 +304,6 @@ class _PortfolioPageState extends State<PortfolioPage> {
   final _scroll = ScrollController();
   final _work = GlobalKey();
   final _about = GlobalKey();
-  final _contact = GlobalKey();
 
   @override
   void dispose() {
@@ -326,169 +326,193 @@ class _PortfolioPageState extends State<PortfolioPage> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    body: SelectionArea(
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          final wide = constraints.maxWidth >= 850;
-          final padding = wide ? 32.0 : 18.0;
-          return Scrollbar(
-            controller: _scroll,
-            child: SingleChildScrollView(
-              controller: _scroll,
-              child: Center(
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 1480),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: padding),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _nav(wide),
-                        _hero(wide),
-                        const SizedBox(height: 36),
-                        _sectionLabel(
-                          '01 / SELECTED WORK',
-                          'A few things I’ve helped bring to life.',
-                          key: _work,
-                        ),
-                        const SizedBox(height: 30),
-                        Text(
-                          'Selected products. Real-world impact.',
-                          style: TextStyle(
-                            fontSize: wide ? 32 : 28,
-                            height: 1.07,
-                            letterSpacing: 0,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        const SizedBox(height: 14),
-                        Text(
-                          'Web platforms, shared journeys, and everyday healthcare.\nA selection of the products I’ve helped build.',
-                          style: TextStyle(
-                            color: Theme.of(
-                              context,
-                            ).colorScheme.onSurfaceVariant,
-                            fontSize: 16,
-                            height: 1.7,
-                          ),
-                        ),
-                        const SizedBox(height: 24),
-                        _project(2, 280),
-                        const SizedBox(height: 32),
-                        _project(0, wide ? 340 : 230),
-                        const SizedBox(height: 32),
-                        CarbeeScreenWall(project: projects.first),
-                        const SizedBox(height: 36),
-                        LayoutBuilder(
-                          builder: (context, bounds) {
-                            final columns = bounds.maxWidth >= 1100
-                                ? 3
-                                : bounds.maxWidth >= 650
-                                ? 2
-                                : 1;
-                            final width =
-                                (bounds.maxWidth - (columns - 1) * 24) /
-                                columns;
-                            return Wrap(
-                              spacing: 24,
-                              runSpacing: 32,
+    body: Column(
+      children: [
+        SafeArea(
+          bottom: false,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 18),
+            child: _nav(MediaQuery.sizeOf(context).width >= 1100),
+          ),
+        ),
+        Expanded(
+          child: CustomPaint(
+            painter: PortfolioGrid(
+              Theme.of(context).colorScheme.primary.withValues(alpha: .065),
+            ),
+            child: SelectionArea(
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final wide = constraints.maxWidth >= 850;
+                  final padding = wide ? 32.0 : 18.0;
+                  return Scrollbar(
+                    controller: _scroll,
+                    child: SingleChildScrollView(
+                      controller: _scroll,
+                      child: Center(
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(maxWidth: 1480),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: padding),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                for (final i in [1, 3, 4, 5, 6])
-                                  SizedBox(
-                                    width: width,
-                                    child: _project(i, 270),
+                                _hero(wide),
+                                const SizedBox(height: 36),
+                                _sectionLabel(
+                                  '01 / SELECTED WORK',
+                                  'A few things I’ve helped bring to life.',
+                                  key: _work,
+                                ),
+                                const SizedBox(height: 30),
+                                Text(
+                                  'Selected products. Real-world impact.',
+                                  style: TextStyle(
+                                    fontSize: wide ? 32 : 28,
+                                    height: 1.07,
+                                    letterSpacing: 0,
+                                    fontWeight: FontWeight.w600,
                                   ),
+                                ),
+                                const SizedBox(height: 14),
+                                Text(
+                                  'Web platforms, shared journeys, and everyday healthcare.\nA selection of the products I’ve helped build.',
+                                  style: TextStyle(
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.onSurfaceVariant,
+                                    fontSize: 16,
+                                    height: 1.7,
+                                  ),
+                                ),
+                                const SizedBox(height: 24),
+                                _project(2, 280),
+                                const SizedBox(height: 32),
+                                _project(0, wide ? 440 : 330),
+                                const SizedBox(height: 32),
+                                CarbeeScreenWall(project: projects.first),
+                                const SizedBox(height: 36),
+                                LayoutBuilder(
+                                  builder: (context, bounds) {
+                                    final columns = bounds.maxWidth >= 1100
+                                        ? 3
+                                        : bounds.maxWidth >= 650
+                                        ? 2
+                                        : 1;
+                                    final width =
+                                        (bounds.maxWidth - (columns - 1) * 24) /
+                                        columns;
+                                    return Wrap(
+                                      spacing: 24,
+                                      runSpacing: 32,
+                                      children: [
+                                        for (final i in [1, 3, 4, 5, 6])
+                                          SizedBox(
+                                            width: width,
+                                            child: _project(i, 270),
+                                          ),
+                                      ],
+                                    );
+                                  },
+                                ),
+                                const SizedBox(height: 36),
+                                const Divider(),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 28,
+                                  ),
+                                  child: Text(
+                                    'MORE WORLDS I’VE WORKED IN',
+                                    style: _eyebrow,
+                                  ),
+                                ),
+                                Wrap(
+                                  spacing: 14,
+                                  runSpacing: 14,
+                                  children: [
+                                    for (final p in additionalProjects)
+                                      ActionChip(
+                                        avatar: ProjectIcon(
+                                          name: p.$1,
+                                          fallback: p.$3,
+                                          size: 32,
+                                        ),
+                                        label: Text(p.$1),
+                                        backgroundColor: Colors.transparent,
+                                        side: const BorderSide(
+                                          color: Color(0xFFDEDDD7),
+                                        ),
+                                        padding: const EdgeInsets.all(10),
+                                        onPressed: () => showProjectLinks(
+                                          context,
+                                          p.$1,
+                                          description: p.$2,
+                                          fallbackIcon: p.$3,
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                                const SizedBox(height: 60),
+                                _aboutSection(wide),
+                                const SizedBox(height: 60),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 30,
+                                  ),
+                                  child: Wrap(
+                                    alignment: WrapAlignment.spaceBetween,
+                                    spacing: 45,
+                                    runSpacing: 12,
+                                    children: [
+                                      Text(
+                                        '© Muhammad Ikram Ul Haq',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: Theme.of(
+                                            context,
+                                          ).colorScheme.onSurfaceVariant,
+                                        ),
+                                      ),
+                                      Text(
+                                        'Built with Flutter. Made with intention.',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: Theme.of(
+                                            context,
+                                          ).colorScheme.onSurfaceVariant,
+                                        ),
+                                      ),
+                                      TextButton(
+                                        onPressed: () => _scroll.animateTo(
+                                          0,
+                                          duration:
+                                              MediaQuery.disableAnimationsOf(
+                                                context,
+                                              )
+                                              ? Duration.zero
+                                              : const Duration(
+                                                  milliseconds: 700,
+                                                ),
+                                          curve: Curves.easeInOut,
+                                        ),
+                                        child: const Text('Back to top ↑'),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ],
-                            );
-                          },
-                        ),
-                        const SizedBox(height: 36),
-                        const Divider(),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 28),
-                          child: Text(
-                            'MORE WORLDS I’VE WORKED IN',
-                            style: _eyebrow,
+                            ),
                           ),
                         ),
-                        Wrap(
-                          spacing: 14,
-                          runSpacing: 14,
-                          children: [
-                            for (final p in additionalProjects)
-                              ActionChip(
-                                avatar: ProjectIcon(
-                                  name: p.$1,
-                                  fallback: p.$3,
-                                  size: 32,
-                                ),
-                                label: Text(p.$1),
-                                backgroundColor: Colors.transparent,
-                                side: const BorderSide(
-                                  color: Color(0xFFDEDDD7),
-                                ),
-                                padding: const EdgeInsets.all(10),
-                                onPressed: () => showProjectLinks(
-                                  context,
-                                  p.$1,
-                                  description: p.$2,
-                                  fallbackIcon: p.$3,
-                                ),
-                              ),
-                          ],
-                        ),
-                        const SizedBox(height: 60),
-                        _aboutSection(wide),
-                        const SizedBox(height: 60),
-                        _contactSection(wide),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 30),
-                          child: Wrap(
-                            alignment: WrapAlignment.spaceBetween,
-                            spacing: 45,
-                            runSpacing: 12,
-                            children: [
-                              Text(
-                                '© Muhammad Ikram Ul Haq',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Theme.of(
-                                    context,
-                                  ).colorScheme.onSurfaceVariant,
-                                ),
-                              ),
-                              Text(
-                                'Built with Flutter. Made with intention.',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Theme.of(
-                                    context,
-                                  ).colorScheme.onSurfaceVariant,
-                                ),
-                              ),
-                              TextButton(
-                                onPressed: () => _scroll.animateTo(
-                                  0,
-                                  duration:
-                                      MediaQuery.disableAnimationsOf(context)
-                                      ? Duration.zero
-                                      : const Duration(milliseconds: 700),
-                                  curve: Curves.easeInOut,
-                                ),
-                                child: const Text('Back to top ↑'),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
-                ),
+                  );
+                },
               ),
             ),
-          );
-        },
-      ),
+          ),
+        ),
+      ],
     ),
   );
 
@@ -503,17 +527,33 @@ class _PortfolioPageState extends State<PortfolioPage> {
     if (!openExternalLink(url)) _copy(context, url, 'Contact link copied');
   }
 
-  Widget _nav(bool wide) => Padding(
-    padding: const EdgeInsets.symmetric(vertical: 14),
+  Widget _nav(bool wide) => Container(
+    margin: const EdgeInsets.symmetric(vertical: 8),
+    padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+    decoration: BoxDecoration(
+      color: Theme.of(context).colorScheme.surface,
+      border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
+      borderRadius: BorderRadius.circular(20),
+    ),
     child: Wrap(
       alignment: WrapAlignment.spaceBetween,
       crossAxisAlignment: WrapCrossAlignment.center,
       spacing: 16,
       runSpacing: 8,
       children: [
-        const Text(
-          'ikram ul haq.',
-          style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CircleAvatar(
+              radius: 18,
+              backgroundImage: const AssetImage('assets/images/ikram.png'),
+            ),
+            const SizedBox(width: 10),
+            const Text(
+              'ikram ul haq.',
+              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18),
+            ),
+          ],
         ),
         Wrap(
           crossAxisAlignment: WrapCrossAlignment.center,
@@ -529,10 +569,18 @@ class _PortfolioPageState extends State<PortfolioPage> {
               icon: const Icon(Icons.download_outlined, size: 18),
               label: const Text('Download resume'),
             ),
+            Tooltip(
+              message: 'Email',
+              child: TextButton.icon(
+                onPressed: () => _openContact('mailto:emikramulhaq@gmail.com'),
+                icon: const Icon(Icons.mail_outline, size: 19),
+                label: Text(wide ? 'emikramulhaq@gmail.com' : 'Email'),
+              ),
+            ),
             IconButton(
-              tooltip: 'Email',
-              onPressed: () => _openContact('mailto:emikramulhaq@gmail.com'),
-              icon: const Icon(Icons.mail_outline, size: 19),
+              tooltip: '+92 309 525 1250',
+              onPressed: () => _openContact('tel:+923095251250'),
+              icon: const Icon(Icons.phone_outlined, size: 19),
             ),
             IconButton(
               tooltip: 'GitHub',
@@ -589,7 +637,7 @@ class _PortfolioPageState extends State<PortfolioPage> {
     final intro = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('MOBILE ENGINEER · iOS & ANDROID', style: _eyebrow),
+        Text('SENIOR SOFTWARE ENGINEER · TECH LEAD', style: _eyebrow),
         const SizedBox(height: 25),
         Text(
           'Muhammad\nIkram Ul Haq.',
@@ -602,7 +650,7 @@ class _PortfolioPageState extends State<PortfolioPage> {
         ),
         const SizedBox(height: 22),
         Text(
-          'Production mobile apps.\nHands-on engineering and team leadership.',
+          'Thoughtful software.\nConfident delivery.',
           style: TextStyle(
             fontSize: wide ? 22 : 20,
             height: 1.3,
@@ -614,7 +662,7 @@ class _PortfolioPageState extends State<PortfolioPage> {
         ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 470),
           child: Text(
-            'I build and maintain applications with Flutter and native iOS using Swift and UIKit. My work spans healthcare, automotive platforms, and AI-related products, with ownership from API integration and architecture through release. Based in Islamabad and available for remote opportunities.',
+            'I’m a Senior Software Engineer and Tech Lead, building mobile and web products. With 6+ years in engineering and 3+ years leading teams, I connect hands-on implementation, architecture, and delivery. My interests span technical leadership, project management, and agentic AI.',
             style: TextStyle(
               fontSize: 14,
               height: 1.6,
@@ -640,10 +688,6 @@ class _PortfolioPageState extends State<PortfolioPage> {
               ),
               child: const Text('View selected work ↘'),
             ),
-            TextButton(
-              onPressed: () => _go(_contact),
-              child: const Text('Let’s connect ↗'),
-            ),
           ],
         ),
         const SizedBox(height: 35),
@@ -657,58 +701,96 @@ class _PortfolioPageState extends State<PortfolioPage> {
         ),
       ],
     );
-    final portrait = SizedBox(
-      height: wide ? 310 : 270,
-      child: Stack(
+    final portrait = Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Positioned.fill(
-            left: 20,
-            top: 0,
-            right: 0,
-            bottom: 30,
-            child: Container(
-              decoration: BoxDecoration(
-                color: const Color(0xFFE4E0D8),
-                borderRadius: BorderRadius.circular(26),
+          Row(
+            children: [
+              ClipOval(
+                child: Image.asset(
+                  'assets/images/ikram.png',
+                  width: 64,
+                  height: 64,
+                  fit: BoxFit.cover,
+                  alignment: Alignment.topCenter,
+                ),
               ),
-              clipBehavior: Clip.antiAlias,
-              child: Image.asset(
-                'assets/images/ikram.png',
-                fit: BoxFit.cover,
-                alignment: Alignment.topCenter,
-                semanticLabel: 'Muhammad Ikram Ul Haq',
+              const SizedBox(width: 14),
+              const Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Ikram Ul Haq',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      'Engineering with ownership',
+                      style: TextStyle(fontSize: 11),
+                    ),
+                  ],
+                ),
               ),
-            ),
+            ],
           ),
-          Positioned(
-            left: 0,
-            bottom: 0,
-            right: 30,
-            child: Container(
-              padding: const EdgeInsets.all(23),
-              decoration: BoxDecoration(
-                color: ink,
-                borderRadius: BorderRadius.circular(18),
-              ),
-              child: const Row(
+          const SizedBox(height: 24),
+          for (final item in [
+            ('6+', 'Years in software engineering'),
+            ('3+', 'Years leading teams'),
+            ('15+', 'Apps built & contributed to'),
+          ])
+            Padding(
+              padding: const EdgeInsets.only(bottom: 18),
+              child: Row(
                 children: [
-                  Text(
-                    '15+',
-                    style: TextStyle(
-                      color: paper,
-                      fontSize: 28,
-                      fontWeight: FontWeight.w600,
+                  SizedBox(
+                    width: 60,
+                    child: Text(
+                      item.$1,
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.w700,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
                     ),
                   ),
-                  SizedBox(width: 18),
                   Expanded(
-                    child: Text(
-                      'Apps built & contributed to\nAcross products, platforms, and teams.',
-                      style: TextStyle(color: paper, fontSize: 11, height: 1.6),
-                    ),
+                    child: Text(item.$2, style: const TextStyle(fontSize: 12)),
                   ),
                 ],
               ),
+            ),
+          const Divider(),
+          const SizedBox(height: 12),
+          const Row(
+            children: [
+              Icon(Icons.circle, size: 8, color: Color(0xFF008557)),
+              SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  'Islamabad · On-site, hybrid & remote',
+                  style: TextStyle(fontSize: 11),
+                ),
+              ),
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 16.0, top: 4),
+            child: Text(
+              'Available for immediate joining',
+              style: TextStyle(fontSize: 8),
             ),
           ),
         ],
@@ -732,40 +814,8 @@ class _PortfolioPageState extends State<PortfolioPage> {
             const SizedBox(height: 35),
             SizedBox(width: 310, child: portrait),
           ],
-          const SizedBox(height: 28),
-          const Divider(),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20),
-            child: Wrap(
-              spacing: wide ? 44 : 24,
-              runSpacing: 15,
-              alignment: WrapAlignment.center,
-              children: [
-                for (final label in [
-                  'Flutter',
-                  'Dart',
-                  'Swift / UIKit',
-                  'iOS concurrency',
-                  'REST APIs / JSON',
-                  'BLoC / Cubit',
-                  'Firebase',
-                  'CI/CD',
-                  'AI-assisted development',
-                  'Spec-driven development',
-                  'Google ML Kit',
-                ])
-                  Text(
-                    label,
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-              ],
-            ),
-          ),
-          const Divider(),
+          const SizedBox(height: 40),
+          const CapabilityPanel(),
         ],
       ),
     );
@@ -993,7 +1043,7 @@ class _PortfolioPageState extends State<PortfolioPage> {
         for (final role in [
           (
             'Techtronix',
-            'Team Lead Flutter Developer',
+            'Tech Lead — Flutter & Mobile/Web Engineering',
             'MAR 2024 — PRESENT',
             'assets/images/company-techtronix.png',
           ),
@@ -1110,96 +1160,6 @@ class _PortfolioPageState extends State<PortfolioPage> {
       ],
     );
   }
-
-  Widget _contactSection(bool wide) => Container(
-    key: _contact,
-    width: double.infinity,
-    padding: EdgeInsets.all(wide ? 55 : 27),
-    decoration: BoxDecoration(
-      color: ink,
-      borderRadius: BorderRadius.circular(25),
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          '03 / WHAT’S NEXT?',
-          style: TextStyle(
-            fontSize: 10,
-            letterSpacing: 2,
-            color: Color(0xFFB7B3C0),
-          ),
-        ),
-        const SizedBox(height: 24),
-        Text(
-          'Have something\ngood in mind?',
-          style: TextStyle(
-            fontSize: wide ? 38 : 30,
-            height: 1.05,
-            letterSpacing: 0,
-            fontWeight: FontWeight.w500,
-            color: paper,
-          ),
-        ),
-        const SizedBox(height: 22),
-        const Text(
-          'Let’s turn it into something people love to use.',
-          style: TextStyle(color: Color(0xFFB7B3C0), height: 1.6),
-        ),
-        const SizedBox(height: 25),
-        const SelectableText(
-          'emikramulhaq@gmail.com',
-          style: TextStyle(color: Color(0xFFD0BDFF), fontSize: 18),
-        ),
-        const SizedBox(height: 18),
-        Wrap(
-          spacing: 12,
-          runSpacing: 12,
-          children: [
-            FilledButton.icon(
-              onPressed: () =>
-                  _copy(context, 'emikramulhaq@gmail.com', 'Email copied'),
-              style: FilledButton.styleFrom(
-                backgroundColor: const Color(0xFFD0BDFF),
-                foregroundColor: ink,
-              ),
-              icon: const Icon(Icons.copy, size: 15),
-              label: const Text('Copy email'),
-            ),
-            TextButton(
-              onPressed: () => _social(
-                'LinkedIn',
-                'https://www.linkedin.com/in/em-ikram-a718a9145/',
-              ),
-              child: const Text('LinkedIn ↗', style: TextStyle(color: paper)),
-            ),
-            TextButton(
-              onPressed: () => _social('GitHub', 'https://github.com/EMIkram'),
-              child: const Text('GitHub ↗', style: TextStyle(color: paper)),
-            ),
-          ],
-        ),
-      ],
-    ),
-  );
-
-  void _social(String name, String url) => showDialog<void>(
-    context: context,
-    builder: (context) => AlertDialog(
-      title: Text(name),
-      content: SelectableText(url),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text('Close'),
-        ),
-        FilledButton(
-          onPressed: () => _copy(context, url, '$name link copied'),
-          child: const Text('Copy link'),
-        ),
-      ],
-    ),
-  );
 }
 
 Future<void> _copy(BuildContext context, String value, String message) async {
@@ -1299,7 +1259,9 @@ class _ProjectTileState extends State<ProjectTile> {
               onEnter: (_) => setState(() => _hovered = true),
               onExit: (_) => setState(() => _hovered = false),
               child: Material(
-                color: widget.project.color,
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? const Color(0xFF292541)
+                    : const Color(0xFFE5E0F4),
                 borderRadius: BorderRadius.circular(20),
                 clipBehavior: Clip.antiAlias,
                 child: InkWell(
@@ -1315,13 +1277,13 @@ class _ProjectTileState extends State<ProjectTile> {
                         children: [
                           Positioned.fill(
                             child: AnimatedScale(
-                              scale: _hovered && !_reduceMotion ? 1.04 : 1,
+                              scale: 1,
                               duration: _reduceMotion
                                   ? Duration.zero
                                   : const Duration(milliseconds: 400),
                               curve: Curves.easeOutCubic,
                               child: Transform.translate(
-                                offset: Offset(0, _shift),
+                                offset: Offset.zero,
                                 child: ProjectArtwork(project: widget.project),
                               ),
                             ),
@@ -1372,13 +1334,34 @@ class _ProjectTileState extends State<ProjectTile> {
                     ),
                   ),
                 ),
-                Text(
-                  '0${widget.index + 1}',
-                  style: TextStyle(
-                    fontSize: 11,
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
-                ),
+                for (final link
+                    in projectLinks[widget.project.name] ??
+                        [
+                          (
+                            widget.project.link?.contains('apps.apple.com') ??
+                                    false
+                                ? 'App Store'
+                                : 'Website',
+                            widget.project.link ?? '',
+                          ),
+                        ])
+                  if (link.$2.isNotEmpty)
+                    IconButton(
+                      tooltip: '${widget.project.name} · ${link.$1}',
+                      onPressed: () {
+                        if (!openExternalLink(link.$2)) {
+                          _copy(context, link.$2, 'Project link copied');
+                        }
+                      },
+                      icon: Icon(
+                        link.$1 == 'App Store'
+                            ? Icons.apple
+                            : link.$1 == 'Google Play'
+                            ? Icons.play_arrow_rounded
+                            : Icons.language,
+                        size: 20,
+                      ),
+                    ),
               ],
             ),
             const SizedBox(height: 6),

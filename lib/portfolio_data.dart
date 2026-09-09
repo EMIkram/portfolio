@@ -16,6 +16,13 @@ const projectIcons = {
 };
 
 const projectLinks = <String, List<(String, String)>>{
+  'Carpool': [
+    (
+      'Google Play',
+      'https://play.google.com/store/apps/details?id=com.carpoolingpk.carpool',
+    ),
+  ],
+  'Dr.iQ': [('App Store', 'https://apps.apple.com/pk/app/dr-iq/id1345802108')],
   'Carbee': [
     (
       'Google Play',

@@ -5,238 +5,222 @@ class ScreenshotComposition extends StatelessWidget {
   const ScreenshotComposition({super.key, required this.project});
   final Project project;
 
-  @override
-  Widget build(BuildContext context) => project.mobile
-      ? _mobileComposition()
-      : ClipRect(
-          child: LayoutBuilder(
-            builder: (context, constraints) => Stack(
-              children: [
-                Positioned(
-                  right: -60,
-                  top: -100,
-                  child: Container(
-                    width: 310,
-                    height: 310,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white.withValues(alpha: .3),
-                    ),
-                  ),
-                ),
-                Positioned.fill(
-                  left: 12,
-                  right: 12,
-                  top: 20,
-                  bottom: 20,
-                  child: FittedBox(
-                    child: SizedBox(
-                      width: 1100,
-                      height: 440,
-                      child: Stack(
-                        children: [
-                          Positioned(
-                            left: 0,
-                            top: 16,
-                            width: 390,
-                            child: BrowserFrame(screen: project.screens[8]),
-                          ),
-                          Positioned(
-                            top: 16,
-                            right: 3,
-                            width: 470,
-                            child: Transform.rotate(
-                              angle: .075,
-                              child: BrowserFrame(screen: project.screens[2]),
-                            ),
-                          ),
-                          Positioned(
-                            left: 160,
-                            top: 114,
-                            width: 620,
-                            child: Transform.rotate(
-                              angle: -.055,
-                              child: BrowserFrame(
-                                screen: project.screens.first,
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            right: 90,
-                            top: 132,
-                            width: 125,
-                            height: 272,
-                            child: Transform.rotate(
-                              angle: .07,
-                              child: _phone(project.screens[20]),
-                            ),
-                          ),
-                          Positioned(
-                            right: 225,
-                            top: 151,
-                            width: 120,
-                            height: 260,
-                            child: Transform.rotate(
-                              angle: -.06,
-                              child: _phone(project.screens[17]),
-                            ),
-                          ),
-                          Positioned(
-                            left: 32,
-                            top: 155,
-                            width: 125,
-                            height: 272,
-                            child: Transform.rotate(
-                              angle: -.06,
-                              child: _phone(project.screens[7]),
-                            ),
-                          ),
-                          Positioned(
-                            right: 12,
-                            bottom: 12,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 17,
-                                vertical: 13,
-                              ),
-                              decoration: BoxDecoration(
-                                color: const Color(0xFF171719),
-                                borderRadius: BorderRadius.circular(14),
-                              ),
-                              child: const Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(
-                                    Icons.layers_outlined,
-                                    color: Color(0xFFFFC229),
-                                    size: 22,
-                                  ),
-                                  SizedBox(width: 12),
-                                  Text(
-                                    'How we buy and sell cars now',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 13,
-                                      height: 1.4,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-
-  Widget _phone((String, String) screen) => Container(
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(16),
-      border: Border.all(color: const Color(0xFF232326), width: 4),
-      boxShadow: const [
-        BoxShadow(color: Colors.black26, blurRadius: 20, offset: Offset(0, 8)),
-      ],
-    ),
-    clipBehavior: Clip.antiAlias,
-    child: ScreenshotImage(
-      screen.$2,
-      fit: BoxFit.contain,
-      semanticLabel: screen.$1,
-    ),
-  );
-
-  Widget _mobileComposition() => ClipRect(
-    child: Padding(
-      padding: const EdgeInsets.all(18),
-      child: Center(
-        child: FittedBox(
-          child: SizedBox(
-            width: 590,
-            height: 570,
+  Widget _screen(int i) {
+    final screen = project.screens[i];
+    if (project.name == 'Dr.iQ' && (i == 1 || i == 2)) {
+      return FittedBox(
+        fit: BoxFit.contain,
+        child: SizedBox(
+          width: 193,
+          height: 423,
+          child: ClipRect(
             child: Stack(
               children: [
-                for (var i = 0; i < project.screens.length.clamp(0, 3); i++)
-                  Positioned(
-                    left: [12.0, 195.0, 374.0][i],
-                    top: [70.0, 15.0, 92.0][i],
-                    width: 200,
-                    height: 440,
-                    child: Transform.rotate(
-                      angle: [-.10, .015, .10][i],
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(25),
-                          border: Border.all(color: Colors.white, width: 5),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: .18),
-                              blurRadius: 28,
-                              offset: const Offset(8, 18),
-                            ),
-                          ],
-                        ),
-                        clipBehavior: Clip.antiAlias,
-                        child: project.name == 'Dr.iQ' && i > 0
-                            ? FittedBox(
-                                fit: BoxFit.contain,
-                                child: SizedBox(
-                                  width: 193,
-                                  height: 423,
-                                  child: ClipRect(
-                                    child: Stack(
-                                      children: [
-                                        Positioned(
-                                          left: -75,
-                                          top: -137,
-                                          width: 340,
-                                          height: 605,
-                                          child: ScreenshotImage(
-                                            project.screens[i].$2,
-                                            fit: BoxFit.fill,
-                                            semanticLabel:
-                                                project.screens[i].$1,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              )
-                            : ScreenshotImage(
-                                project.screens[i].$2,
-                                fit: BoxFit.contain,
-                                semanticLabel:
-                                    '${project.name} — ${project.screens[i].$1}',
-                              ),
-                      ),
-                    ),
-                  ),
                 Positioned(
-                  left: 32,
-                  bottom: 8,
-                  child: Text(
-                    project.name.toUpperCase(),
-                    style: const TextStyle(
-                      fontSize: 13,
-                      letterSpacing: 3,
-                      fontWeight: FontWeight.w600,
-                    ),
+                  left: -75,
+                  top: -137,
+                  width: 340,
+                  height: 605,
+                  child: ScreenshotImage(
+                    screen.$2,
+                    fit: BoxFit.fill,
+                    semanticLabel: screen.$1,
                   ),
                 ),
               ],
             ),
           ),
         ),
+      );
+    }
+    return ScreenshotImage(
+      screen.$2,
+      fit: BoxFit.contain,
+      semanticLabel: screen.$1,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final features = switch (project.name) {
+      'Carbee' => [
+        'Customer & dealer apps',
+        'Admin & dealership portals',
+        'Shared design foundations',
+      ],
+      'Dr.iQ' => ['Online consultations', 'Appointments', 'Repeat medication'],
+      'Carpool' => [
+        'Find shared journeys',
+        'Offer available seats',
+        'Manage ride requests',
+      ],
+      'Ayuda Health' => [
+        'Health readings',
+        'Medication reminders',
+        'Symptom diaries',
+      ],
+      'My Treats' => ['Browse the menu', 'Place an order', 'Delivery journeys'],
+      'LSUK' => ['Interpreter jobs', 'Timesheets', 'Service workflows'],
+      _ => ['Ingredient discovery', 'Search & browse', 'Mobile experience'],
+    };
+    return Padding(
+      padding: const EdgeInsets.all(20),
+      child: LayoutBuilder(
+        builder: (context, bounds) {
+          final wide = bounds.maxWidth > 620 && bounds.maxHeight >= 230;
+          final art = project.mobile
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    for (final i
+                        in (project.name == 'Dr.iQ' ? [3, 0, 4] : [0, 1]))
+                      Flexible(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 6),
+                          child: PhonePreview(child: _screen(i)),
+                        ),
+                      ),
+                  ],
+                )
+              : FittedBox(
+                  fit: BoxFit.contain,
+                  child: SizedBox(
+                    width: 900,
+                    height: 500,
+                    child: Stack(
+                      children: [
+                        Positioned(
+                          left: 0,
+                          top: 0,
+                          width: 610,
+                          child: BrowserFrame(screen: project.screens[0]),
+                        ),
+                        Positioned(
+                          left: 0,
+                          top: 330,
+                          width: 298,
+                          child: BrowserFrame(screen: project.screens[2]),
+                        ),
+                        Positioned(
+                          left: 312,
+                          top: 330,
+                          width: 298,
+                          child: BrowserFrame(screen: project.screens[21]),
+                        ),
+                        Positioned(
+                          left: 635,
+                          top: 70,
+                          width: 122,
+                          height: 282,
+                          child: PhonePreview(child: _screen(6)),
+                        ),
+                        Positioned(
+                          left: 774,
+                          top: 70,
+                          width: 122,
+                          height: 282,
+                          child: PhonePreview(child: _screen(7)),
+                        ),
+                        const Positioned(
+                          left: 635,
+                          top: 372,
+                          width: 261,
+                          child: Text(
+                            'Customer & dealer mobile',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 14),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+          if (!wide) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  features.take(2).join('  /  '),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: scheme.primary,
+                    fontSize: 10,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Expanded(child: art),
+              ],
+            );
+          }
+          return Row(
+            children: [
+              SizedBox(
+                width: 210,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      project.category,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 9,
+                        letterSpacing: 1.2,
+                        color: scheme.primary,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      project.summary,
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        height: 1.25,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(height: 18),
+                    for (final feature in features)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 9),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.check_circle_outline,
+                              size: 14,
+                              color: scheme.primary,
+                            ),
+                            const SizedBox(width: 7),
+                            Expanded(
+                              child: Text(
+                                feature,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: scheme.onSurfaceVariant,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 24),
+              Expanded(child: art),
+            ],
+          );
+        },
       ),
-    ),
-  );
+    );
+  }
 }
 
 class CarbeeScreenWall extends StatelessWidget {
@@ -296,7 +280,7 @@ class CarbeeScreenWall extends StatelessWidget {
                 if (column > 0) const SizedBox(width: 16),
                 Expanded(
                   child: Padding(
-                    padding: EdgeInsets.only(top: column.isOdd ? 34 : 0),
+                    padding: EdgeInsets.only(top: 0),
                     child: Column(
                       children: [
                         for (
@@ -307,7 +291,7 @@ class CarbeeScreenWall extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.only(bottom: 24),
                             child: Transform.rotate(
-                              angle: position.isEven ? -.012 : .012,
+                              angle: 0,
                               child: InkWell(
                                 borderRadius: BorderRadius.circular(14),
                                 onTap: () => showDialog<void>(
@@ -610,6 +594,7 @@ class _ScreenshotImageState extends State<ScreenshotImage> {
     widget.path,
     key: ValueKey('${widget.path}:$_attempt'),
     fit: widget.fit,
+    filterQuality: FilterQuality.high,
     semanticLabel: widget.semanticLabel,
     frameBuilder: (context, child, frame, synchronous) =>
         frame != null || synchronous
@@ -631,6 +616,33 @@ class _ScreenshotImageState extends State<ScreenshotImage> {
           icon: const Icon(Icons.refresh),
           label: const Text('Retry screenshot'),
         ),
+      ),
+    ),
+  );
+}
+
+class PhonePreview extends StatelessWidget {
+  const PhonePreview({super.key, required this.child});
+  final Widget child;
+  @override
+  Widget build(BuildContext context) => AspectRatio(
+    aspectRatio: .46,
+    child: Container(
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: const Color(0xFF20212A),
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x22000000),
+            blurRadius: 12,
+            offset: Offset(0, 5),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(14),
+        child: ColoredBox(color: Colors.white, child: child),
       ),
     ),
   );

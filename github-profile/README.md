@@ -2,7 +2,7 @@
 <img src="assets/ikram.png" width="100" alt="Muhammad Ikram Ul Haq" />
 
 # Muhammad Ikram Ul Haq
-### Flutter & Native iOS Engineer · Team Lead
+### Flutter & Native iOS Engineer · Tech Lead
 
 I build apps and help teams build better.
 
@@ -59,7 +59,7 @@ I care about maintainable architecture, dependable releases, and the details tha
 
 | Period | Company | Role |
 | :--- | :--- | :--- |
-| Mar 2024 – Present | Techtronix | Team Lead Flutter Developer |
+| Mar 2024 – Present | Techtronix | Tech Lead — Flutter & Mobile/Web Engineering |
 | Jun 2022 – Mar 2024 | AT-Tech | Software Engineer · Flutter & iOS |
 | Jan 2022 – Jun 2022 | Heuristify | Flutter Developer |
 | Nov 2020 – Jan 2022 | SBS | Associate Software Engineer |

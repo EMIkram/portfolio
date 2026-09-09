@@ -26,11 +26,11 @@ resume = [
 ('subtitle', 'Mobile Engineer | iOS and Android | Flutter and Native iOS'),
 ('contact', contact),
 ('heading', 'Professional profile'),
-('body', 'Mobile engineer and team lead with 6+ years of experience across Flutter, native iOS, and production application delivery. Hands-on experience with Swift, UIKit, iOS concurrency, secure API integrations, and App Store workflows. Contributed to a UK healthcare application serving NHS patients and currently lead Carbee’s Flutter Web team while supporting mobile delivery. Apply AI-agent-assisted and spec-driven development across planning, implementation, testing, and review.'),
+('body', 'Mobile engineer and tech lead with 6+ years of experience across Flutter, native iOS, and production application delivery. Hands-on experience with Swift, UIKit, iOS concurrency, secure API integrations, and App Store workflows. Contributed to a UK healthcare application serving NHS patients and currently lead Carbee’s Flutter Web team while supporting mobile delivery. Apply AI-agent-assisted and spec-driven development across planning, implementation, testing, and review.'),
 ('heading', 'Technical skills'),
 ('body', '<b>Native iOS:</b> Swift, UIKit, CoreData, UserDefaults, GCD, async/await, APNs, App Store deployment and maintenance.<br/><b>Cross-platform:</b> Flutter, Dart, BLoC/Cubit, responsive UI, asynchronous programming and streams.<br/><b>Integration:</b> REST APIs, JSON modeling, Firebase, FCM, network interceptors, encryption, centralized error handling, Sqflite and SharedPreferences.<br/><b>Architecture and delivery:</b> Clean Architecture, MVVM, SOLID, reusable packages, GitHub Actions, CI/CD, Jira, Kanban, code reviews and mentoring.<br/><b>AI-related work:</b> AI-assisted and spec-driven development; project experience with avatar chat and Google ML Kit recognition and translation.'),
 ('heading', 'Professional experience'),
-('role', 'Techtronix | Team Lead Flutter Developer | Mar 2024 – Present'),
+('role', 'Techtronix | Tech Lead — Flutter & Mobile/Web Engineering | Mar 2024 – Present'),
 ('bullet', '• Lead Carbee’s Flutter Web team, with primary ownership of admin and dealership portals and collaboration across mobile, backend, QA, and product teams.'),
 ('bullet', '• Build reusable foundations for secure networking, interceptors, centralized errors, request/response tracing, and encryption handling.'),
 ('bullet', '• Own CI/CD and release workflows, including GitHub–Jira automation, QA handoffs, validation, and development, QA, staging, and production environments.'),
@@ -89,6 +89,7 @@ def build(name, content):
     import re
     (OUT / (name+'.md')).write_text('\n\n'.join(re.sub('<[^>]+>', '', text.replace('<br/>','\n')) for kind,text in content if kind != 'break'), encoding='utf8')
 
-build('Muhammad_Ikram_Mobile_Engineer_Resume', resume)
-build('Muhammad_Ikram_Mobile_Engineer_Cover_Letter', letter)
-shutil.copy2(OUT/'Muhammad_Ikram_Mobile_Engineer_Resume.pdf', OUT.parent/'web/resume.pdf')
+if __name__ == '__main__':
+    build('Muhammad_Ikram_Mobile_Engineer_Resume', resume)
+    build('Muhammad_Ikram_Mobile_Engineer_Cover_Letter', letter)
+    shutil.copy2(OUT/'Muhammad_Ikram_Mobile_Engineer_Resume.pdf', OUT.parent/'web/resume.pdf')

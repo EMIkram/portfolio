@@ -153,7 +153,8 @@ void main() {
         await tester.pumpAndSettle();
         expect(tester.takeException(), isNull);
       }
-      expect(find.text('emikramulhaq@gmail.com'), findsOneWidget);
+      expect(find.byTooltip('Email'), findsOneWidget);
+      expect(tester.getTopLeft(find.byTooltip('Email')).dy, lessThan(220));
     });
   }
   testWidgets('Reduced motion keeps project previews visible', (tester) async {
