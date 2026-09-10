@@ -594,7 +594,7 @@ class _PortfolioPageState extends State<PortfolioPage> {
             IconButton(
               tooltip: 'LinkedIn',
               onPressed: () => _openContact(
-                'https://www.linkedin.com/in/em-ikram-a718a9145/',
+                'https://www.linkedin.com/in/muhammad-ikram-ulhaq-a718a9145/',
               ),
               icon: Container(
                 width: 19,
@@ -662,7 +662,7 @@ class _PortfolioPageState extends State<PortfolioPage> {
         ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 470),
           child: Text(
-            'I’m a Senior Software Engineer and Tech Lead, building mobile and web products. With 6+ years in engineering and 3+ years leading teams, I connect hands-on implementation, architecture, and delivery. My interests span technical leadership, project management, and agentic AI.',
+            'I’m a Senior Software Engineer and Tech Lead, building mobile and web products. With 5+ years in engineering and 3+ years leading teams, I connect hands-on implementation, architecture, and delivery. My interests span technical leadership, project management, and agentic AI.',
             style: TextStyle(
               fontSize: 14,
               height: 1.6,
@@ -747,7 +747,7 @@ class _PortfolioPageState extends State<PortfolioPage> {
           ),
           const SizedBox(height: 24),
           for (final item in [
-            ('6+', 'Years in software engineering'),
+            ('5+', 'Years in software engineering'),
             ('3+', 'Years leading teams'),
             ('15+', 'Apps built & contributed to'),
           ])
