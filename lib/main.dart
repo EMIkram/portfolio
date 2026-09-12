@@ -578,7 +578,7 @@ class _PortfolioPageState extends State<PortfolioPage> {
                         children: [
                           for (final child in previousChildren)
                             Positioned.fill(child: IgnorePointer(child: child)),
-                          if (currentChild != null) currentChild,
+                          ?currentChild,
                         ],
                       ),
                       child: _nav(MediaQuery.sizeOf(context).width >= 1100),
