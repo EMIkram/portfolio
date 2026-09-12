@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'portfolio_data.dart';
+import 'github_icon.dart';
 import 'portfolio_visuals.dart';
 import 'project_artwork.dart';
 import 'screenshot_gallery.dart';
@@ -304,9 +305,23 @@ class _PortfolioPageState extends State<PortfolioPage> {
   final _scroll = ScrollController();
   final _work = GlobalKey();
   final _about = GlobalKey();
+  bool _compactHeader = false;
+  final _gridPointer = ValueNotifier<Offset?>(null);
+
+  @override
+  void initState() {
+    super.initState();
+    _scroll.addListener(_updateHeader);
+  }
+
+  void _updateHeader() {
+    final compact = _scroll.offset > (_compactHeader ? 24 : 100);
+    if (compact != _compactHeader) setState(() => _compactHeader = compact);
+  }
 
   @override
   void dispose() {
+    _gridPointer.dispose();
     _scroll.dispose();
     super.dispose();
   }
@@ -326,193 +341,255 @@ class _PortfolioPageState extends State<PortfolioPage> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    body: Column(
-      children: [
-        SafeArea(
-          bottom: false,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 18),
-            child: _nav(MediaQuery.sizeOf(context).width >= 1100),
-          ),
-        ),
-        Expanded(
-          child: CustomPaint(
-            painter: PortfolioGrid(
-              Theme.of(context).colorScheme.primary.withValues(alpha: .065),
-            ),
-            child: SelectionArea(
-              child: LayoutBuilder(
-                builder: (context, constraints) {
-                  final wide = constraints.maxWidth >= 850;
-                  final padding = wide ? 32.0 : 18.0;
-                  return Scrollbar(
-                    controller: _scroll,
-                    child: SingleChildScrollView(
+    body: MouseRegion(
+      onHover: (event) => _gridPointer.value = event.localPosition,
+      onExit: (_) => _gridPointer.value = null,
+      child: Stack(
+        children: [
+          Positioned.fill(
+            child: CustomPaint(
+              painter: PortfolioGrid(
+                Theme.of(context).colorScheme.primary.withValues(alpha: .065),
+                pointer: _gridPointer,
+              ),
+              child: SelectionArea(
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    final wide = constraints.maxWidth >= 850;
+                    final padding = wide ? 32.0 : 18.0;
+                    return Scrollbar(
                       controller: _scroll,
-                      child: Center(
-                        child: ConstrainedBox(
-                          constraints: const BoxConstraints(maxWidth: 1480),
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: padding),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                _hero(wide),
-                                const SizedBox(height: 36),
-                                _sectionLabel(
-                                  '01 / SELECTED WORK',
-                                  'A few things I’ve helped bring to life.',
-                                  key: _work,
-                                ),
-                                const SizedBox(height: 30),
-                                Text(
-                                  'Selected products. Real-world impact.',
-                                  style: TextStyle(
-                                    fontSize: wide ? 32 : 28,
-                                    height: 1.07,
-                                    letterSpacing: 0,
-                                    fontWeight: FontWeight.w600,
+                      child: SingleChildScrollView(
+                        controller: _scroll,
+                        child: Center(
+                          child: ConstrainedBox(
+                            constraints: const BoxConstraints(maxWidth: 1480),
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: padding,
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    height: constraints.maxWidth < 700
+                                        ? 170
+                                        : 100,
                                   ),
-                                ),
-                                const SizedBox(height: 14),
-                                Text(
-                                  'Web platforms, shared journeys, and everyday healthcare.\nA selection of the products I’ve helped build.',
-                                  style: TextStyle(
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.onSurfaceVariant,
-                                    fontSize: 16,
-                                    height: 1.7,
+                                  _hero(wide),
+                                  const SizedBox(height: 36),
+                                  _sectionLabel(
+                                    '01 / SELECTED WORK',
+                                    'A few things I’ve helped bring to life.',
+                                    key: _work,
                                   ),
-                                ),
-                                const SizedBox(height: 24),
-                                _project(2, 280),
-                                const SizedBox(height: 32),
-                                _project(0, wide ? 440 : 330),
-                                const SizedBox(height: 32),
-                                CarbeeScreenWall(project: projects.first),
-                                const SizedBox(height: 36),
-                                LayoutBuilder(
-                                  builder: (context, bounds) {
-                                    final columns = bounds.maxWidth >= 1100
-                                        ? 3
-                                        : bounds.maxWidth >= 650
-                                        ? 2
-                                        : 1;
-                                    final width =
-                                        (bounds.maxWidth - (columns - 1) * 24) /
-                                        columns;
-                                    return Wrap(
-                                      spacing: 24,
-                                      runSpacing: 32,
-                                      children: [
-                                        for (final i in [1, 3, 4, 5, 6])
-                                          SizedBox(
-                                            width: width,
-                                            child: _project(i, 270),
-                                          ),
-                                      ],
-                                    );
-                                  },
-                                ),
-                                const SizedBox(height: 36),
-                                const Divider(),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 28,
+                                  const SizedBox(height: 30),
+                                  Text(
+                                    'Selected products. Real-world impact.',
+                                    style: TextStyle(
+                                      fontSize: wide ? 32 : 28,
+                                      height: 1.07,
+                                      letterSpacing: 0,
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
-                                  child: Text(
-                                    'MORE WORLDS I’VE WORKED IN',
-                                    style: _eyebrow,
+                                  const SizedBox(height: 14),
+                                  Text(
+                                    'Web platforms, shared journeys, and everyday healthcare.\nA selection of the products I’ve helped build.',
+                                    style: TextStyle(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onSurfaceVariant,
+                                      fontSize: 16,
+                                      height: 1.7,
+                                    ),
                                   ),
-                                ),
-                                Wrap(
-                                  spacing: 14,
-                                  runSpacing: 14,
-                                  children: [
-                                    for (final p in additionalProjects)
-                                      ActionChip(
-                                        avatar: ProjectIcon(
-                                          name: p.$1,
-                                          fallback: p.$3,
-                                          size: 32,
-                                        ),
-                                        label: Text(p.$1),
-                                        backgroundColor: Colors.transparent,
-                                        side: const BorderSide(
-                                          color: Color(0xFFDEDDD7),
-                                        ),
-                                        padding: const EdgeInsets.all(10),
-                                        onPressed: () => showProjectLinks(
-                                          context,
-                                          p.$1,
-                                          description: p.$2,
-                                          fallbackIcon: p.$3,
-                                        ),
-                                      ),
-                                  ],
-                                ),
-                                const SizedBox(height: 60),
-                                _aboutSection(wide),
-                                const SizedBox(height: 60),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 30,
+                                  const SizedBox(height: 24),
+                                  _project(2, 280),
+                                  const SizedBox(height: 32),
+                                  _project(0, wide ? 440 : 330),
+                                  const SizedBox(height: 32),
+                                  CarbeeScreenWall(project: projects.first),
+                                  const SizedBox(height: 36),
+                                  LayoutBuilder(
+                                    builder: (context, bounds) {
+                                      final columns = bounds.maxWidth >= 1100
+                                          ? 3
+                                          : bounds.maxWidth >= 650
+                                          ? 2
+                                          : 1;
+                                      final width =
+                                          (bounds.maxWidth -
+                                              (columns - 1) * 24) /
+                                          columns;
+                                      return Wrap(
+                                        spacing: 24,
+                                        runSpacing: 32,
+                                        children: [
+                                          for (final i in [1, 3, 4, 5, 6])
+                                            SizedBox(
+                                              width: width,
+                                              child: _project(i, 270),
+                                            ),
+                                        ],
+                                      );
+                                    },
                                   ),
-                                  child: Wrap(
-                                    alignment: WrapAlignment.spaceBetween,
-                                    spacing: 45,
-                                    runSpacing: 12,
+                                  const SizedBox(height: 36),
+                                  const Divider(),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 28,
+                                    ),
+                                    child: Text(
+                                      'MORE WORLDS I’VE WORKED IN',
+                                      style: _eyebrow,
+                                    ),
+                                  ),
+                                  Wrap(
+                                    spacing: 14,
+                                    runSpacing: 14,
                                     children: [
-                                      Text(
-                                        '© Muhammad Ikram Ul Haq',
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: Theme.of(
+                                      for (final p in additionalProjects)
+                                        ActionChip(
+                                          avatar: ProjectIcon(
+                                            name: p.$1,
+                                            fallback: p.$3,
+                                            size: 32,
+                                          ),
+                                          label: Text(p.$1),
+                                          backgroundColor: Colors.transparent,
+                                          side: const BorderSide(
+                                            color: Color(0xFFDEDDD7),
+                                          ),
+                                          padding: const EdgeInsets.all(10),
+                                          onPressed: () => showProjectLinks(
                                             context,
-                                          ).colorScheme.onSurfaceVariant,
+                                            p.$1,
+                                            description: p.$2,
+                                            fallbackIcon: p.$3,
+                                          ),
                                         ),
-                                      ),
-                                      Text(
-                                        'Built with Flutter. Made with intention.',
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: Theme.of(
-                                            context,
-                                          ).colorScheme.onSurfaceVariant,
-                                        ),
-                                      ),
-                                      TextButton(
-                                        onPressed: () => _scroll.animateTo(
-                                          0,
-                                          duration:
-                                              MediaQuery.disableAnimationsOf(
-                                                context,
-                                              )
-                                              ? Duration.zero
-                                              : const Duration(
-                                                  milliseconds: 700,
-                                                ),
-                                          curve: Curves.easeInOut,
-                                        ),
-                                        child: const Text('Back to top ↑'),
-                                      ),
                                     ],
                                   ),
-                                ),
-                              ],
+                                  const SizedBox(height: 60),
+                                  _aboutSection(wide),
+                                  const SizedBox(height: 60),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 30,
+                                    ),
+                                    child: Wrap(
+                                      alignment: WrapAlignment.spaceBetween,
+                                      spacing: 45,
+                                      runSpacing: 12,
+                                      children: [
+                                        Text(
+                                          '© Muhammad Ikram Ul Haq',
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: Theme.of(
+                                              context,
+                                            ).colorScheme.onSurfaceVariant,
+                                          ),
+                                        ),
+                                        Text(
+                                          'Built with Flutter. Made with intention.',
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: Theme.of(
+                                              context,
+                                            ).colorScheme.onSurfaceVariant,
+                                          ),
+                                        ),
+                                        TextButton(
+                                          onPressed: () => _scroll.animateTo(
+                                            0,
+                                            duration:
+                                                MediaQuery.disableAnimationsOf(
+                                                  context,
+                                                )
+                                                ? Duration.zero
+                                                : const Duration(
+                                                    milliseconds: 700,
+                                                  ),
+                                            curve: Curves.easeInOut,
+                                          ),
+                                          child: const Text('Back to top ↑'),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
             ),
           ),
-        ),
-      ],
+          Positioned(
+            top: 0,
+            left: 18,
+            right: 18,
+            child: SafeArea(
+              bottom: false,
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: AnimatedContainer(
+                  key: const ValueKey('header-shell'),
+                  duration: MediaQuery.disableAnimationsOf(context)
+                      ? Duration.zero
+                      : const Duration(milliseconds: 320),
+                  curve: Curves.easeInOutCubic,
+                  margin: EdgeInsets.symmetric(
+                    vertical: _compactHeader ? 2 : 8,
+                  ),
+                  padding: EdgeInsets.symmetric(
+                    vertical: _compactHeader ? 2 : 10,
+                    horizontal: 16,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surface,
+                    border: Border.all(
+                      color: Theme.of(context).colorScheme.outlineVariant,
+                    ),
+                    borderRadius: BorderRadius.circular(
+                      _compactHeader ? 26 : 20,
+                    ),
+                  ),
+                  clipBehavior: Clip.antiAlias,
+                  child: AnimatedSize(
+                    duration: MediaQuery.disableAnimationsOf(context)
+                        ? Duration.zero
+                        : const Duration(milliseconds: 320),
+                    curve: Curves.easeInOutCubic,
+                    alignment: Alignment.topCenter,
+                    child: AnimatedSwitcher(
+                      duration: MediaQuery.disableAnimationsOf(context)
+                          ? Duration.zero
+                          : const Duration(milliseconds: 160),
+                      layoutBuilder: (currentChild, previousChildren) => Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          for (final child in previousChildren)
+                            Positioned.fill(child: IgnorePointer(child: child)),
+                          if (currentChild != null) currentChild,
+                        ],
+                      ),
+                      child: _nav(MediaQuery.sizeOf(context).width >= 1100),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     ),
   );
 
@@ -528,13 +605,7 @@ class _PortfolioPageState extends State<PortfolioPage> {
   }
 
   Widget _nav(bool wide) => Container(
-    margin: const EdgeInsets.symmetric(vertical: 8),
-    padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-    decoration: BoxDecoration(
-      color: Theme.of(context).colorScheme.surface,
-      border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
-      borderRadius: BorderRadius.circular(20),
-    ),
+    key: ValueKey(_compactHeader ? 'compact-header' : 'expanded-header'),
     child: Wrap(
       alignment: WrapAlignment.spaceBetween,
       crossAxisAlignment: WrapCrossAlignment.center,
@@ -545,37 +616,57 @@ class _PortfolioPageState extends State<PortfolioPage> {
           mainAxisSize: MainAxisSize.min,
           children: [
             CircleAvatar(
-              radius: 18,
+              radius: _compactHeader ? 14 : 18,
               backgroundImage: const AssetImage('assets/images/ikram.png'),
             ),
-            const SizedBox(width: 10),
-            const Text(
-              'ikram ul haq.',
-              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18),
-            ),
+            if (!_compactHeader) const SizedBox(width: 10),
+            if (!_compactHeader)
+              const Text(
+                'ikram ul haq.',
+                style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18),
+              ),
           ],
         ),
         Wrap(
           crossAxisAlignment: WrapCrossAlignment.center,
           spacing: 2,
           children: [
-            TextButton(onPressed: () => _go(_work), child: const Text('Work')),
-            TextButton(
-              onPressed: () => _go(_about),
-              child: const Text('About'),
-            ),
-            TextButton.icon(
-              onPressed: () => _openContact(resumeUrl),
-              icon: const Icon(Icons.download_outlined, size: 18),
-              label: const Text('Download resume'),
-            ),
+            if (!_compactHeader)
+              TextButton(
+                onPressed: () => _go(_work),
+                child: const Text('Work'),
+              ),
+            if (!_compactHeader)
+              TextButton(
+                onPressed: () => _go(_about),
+                child: const Text('About'),
+              ),
+            if (_compactHeader)
+              IconButton(
+                tooltip: 'Download resume',
+                onPressed: () => _openContact(resumeUrl),
+                icon: const Icon(Icons.download_outlined, size: 19),
+              )
+            else
+              TextButton.icon(
+                onPressed: () => _openContact(resumeUrl),
+                icon: const Icon(Icons.download_outlined, size: 18),
+                label: const Text('Download resume'),
+              ),
             Tooltip(
               message: 'Email',
-              child: TextButton.icon(
-                onPressed: () => _openContact('mailto:emikramulhaq@gmail.com'),
-                icon: const Icon(Icons.mail_outline, size: 19),
-                label: Text(wide ? 'emikramulhaq@gmail.com' : 'Email'),
-              ),
+              child: _compactHeader
+                  ? IconButton(
+                      onPressed: () =>
+                          _openContact('mailto:emikramulhaq@gmail.com'),
+                      icon: const Icon(Icons.mail_outline, size: 19),
+                    )
+                  : TextButton.icon(
+                      onPressed: () =>
+                          _openContact('mailto:emikramulhaq@gmail.com'),
+                      icon: const Icon(Icons.mail_outline, size: 19),
+                      label: Text(wide ? 'emikramulhaq@gmail.com' : 'Email'),
+                    ),
             ),
             IconButton(
               tooltip: '+92 309 525 1250',
@@ -585,11 +676,7 @@ class _PortfolioPageState extends State<PortfolioPage> {
             IconButton(
               tooltip: 'GitHub',
               onPressed: () => _openContact('https://github.com/EMIkram'),
-              icon: Image.asset(
-                'assets/images/github-mark.png',
-                width: 20,
-                height: 20,
-              ),
+              icon: const GitHubIcon(),
             ),
             IconButton(
               tooltip: 'LinkedIn',
@@ -637,7 +724,10 @@ class _PortfolioPageState extends State<PortfolioPage> {
     final intro = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('SENIOR SOFTWARE ENGINEER · TECH LEAD', style: _eyebrow),
+        Text(
+          'SENIOR SOFTWARE ENGINEER · TECH LEAD · AI-NATIVE DEVELOPMENT',
+          style: _eyebrow,
+        ),
         const SizedBox(height: 25),
         Text(
           'Muhammad\nIkram Ul Haq.',
@@ -662,7 +752,7 @@ class _PortfolioPageState extends State<PortfolioPage> {
         ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 470),
           child: Text(
-            'I’m a Senior Software Engineer and Tech Lead, building mobile and web products. With 5+ years in engineering and 3+ years leading teams, I connect hands-on implementation, architecture, and delivery. My interests span technical leadership, project management, and agentic AI.',
+            'I’m a Senior Software Engineer and Tech Lead, building mobile and web products. With 5+ years in engineering and 3+ years leading teams, I connect hands-on implementation, architecture, and delivery. AI-assisted and agentic development are part of my daily workflow—from planning and implementation to testing and review. I also bring technical leadership and delivery planning to the work. With AI and focused R&D, I’m confident adapting to new technologies and languages.',
             style: TextStyle(
               fontSize: 14,
               height: 1.6,

@@ -5,6 +5,40 @@ import 'package:portfolio_flutter/portfolio_data.dart';
 import 'package:portfolio_flutter/screenshot_gallery.dart';
 
 void main() {
+  testWidgets('Header compacts while scrolling and expands at the top', (
+    tester,
+  ) async {
+    await tester.pumpWidget(const MyApp());
+    await tester.pumpAndSettle();
+    final expandedHeight = tester
+        .getSize(find.byKey(const ValueKey('expanded-header')))
+        .height;
+    final scroll = tester
+        .widget<SingleChildScrollView>(find.byType(SingleChildScrollView).first)
+        .controller!;
+    final shell = find.byKey(const ValueKey('header-shell'));
+    final expandedWidth = tester.getSize(shell).width;
+    scroll.jumpTo(300);
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+    final transitionWidth = tester.getSize(shell).width;
+    await tester.pumpAndSettle();
+    expect(transitionWidth, lessThan(expandedWidth));
+    expect(transitionWidth, greaterThan(tester.getSize(shell).width));
+    expect(
+      tester.getSize(find.byKey(const ValueKey('compact-header'))).height,
+      lessThan(expandedHeight),
+    );
+    for (final label in ['GitHub', 'Email', 'Download resume']) {
+      expect(find.byTooltip(label), findsOneWidget);
+    }
+    scroll.jumpTo(0);
+    await tester.pumpAndSettle();
+    expect(find.byKey(const ValueKey('expanded-header')), findsOneWidget);
+    expect(find.text('Download resume'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('Failed screenshot offers retry instead of a blank preview', (
     tester,
   ) async {
