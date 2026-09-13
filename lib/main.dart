@@ -16,7 +16,7 @@ const muted = Color(0xFF74736F);
 const resumeUrl = String.fromEnvironment(
   'RESUME_URL',
   defaultValue:
-      'https://drive.google.com/file/d/10GP3VnKlMdyDxZknQBZbJivAEX3EqwNl/view?usp=sharing',
+      'https://drive.google.com/file/d/1BRhQyEfJkDq_yQIyYkrrBtlRIhL33RsP/view?usp=sharing',
 );
 
 void main() => runApp(const MyApp());
@@ -306,6 +306,7 @@ class _PortfolioPageState extends State<PortfolioPage> {
   final _work = GlobalKey();
   final _about = GlobalKey();
   bool _compactHeader = false;
+  bool _effectsEnabled = true;
   final _gridPointer = ValueNotifier<Offset?>(null);
 
   @override
@@ -342,7 +343,8 @@ class _PortfolioPageState extends State<PortfolioPage> {
   @override
   Widget build(BuildContext context) => Scaffold(
     body: MouseRegion(
-      onHover: (event) => _gridPointer.value = event.localPosition,
+      onHover: (event) =>
+          _gridPointer.value = _effectsEnabled ? event.localPosition : null,
       onExit: (_) => _gridPointer.value = null,
       child: Stack(
         children: [
@@ -405,11 +407,15 @@ class _PortfolioPageState extends State<PortfolioPage> {
                                     ),
                                   ),
                                   const SizedBox(height: 24),
-                                  _project(2, 280),
-                                  const SizedBox(height: 32),
                                   _project(0, wide ? 440 : 330),
                                   const SizedBox(height: 32),
-                                  CarbeeScreenWall(project: projects.first),
+                                  CarbeeScreenWall(
+                                    project: projects.firstWhere(
+                                      (project) => project.name == 'Carbee',
+                                    ),
+                                  ),
+                                  const SizedBox(height: 32),
+                                  _project(3, 280),
                                   const SizedBox(height: 36),
                                   LayoutBuilder(
                                     builder: (context, bounds) {
@@ -426,7 +432,7 @@ class _PortfolioPageState extends State<PortfolioPage> {
                                         spacing: 24,
                                         runSpacing: 32,
                                         children: [
-                                          for (final i in [1, 3, 4, 5, 6])
+                                          for (final i in [1, 2, 8, 4, 5, 6, 7, 9])
                                             SizedBox(
                                               width: width,
                                               child: _project(i, 270),
@@ -604,128 +610,150 @@ class _PortfolioPageState extends State<PortfolioPage> {
     if (!openExternalLink(url)) _copy(context, url, 'Contact link copied');
   }
 
-  Widget _nav(bool wide) => Container(
-    key: ValueKey(_compactHeader ? 'compact-header' : 'expanded-header'),
-    child: Wrap(
-      alignment: WrapAlignment.spaceBetween,
-      crossAxisAlignment: WrapCrossAlignment.center,
-      spacing: 16,
-      runSpacing: 8,
-      children: [
-        Row(
+  Widget _nav(bool wide) {
+    final compact = _compactHeader || MediaQuery.sizeOf(context).width < 700;
+    return Container(
+      key: ValueKey(_compactHeader ? 'compact-header' : 'expanded-header'),
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            CircleAvatar(
-              radius: _compactHeader ? 14 : 18,
-              backgroundImage: const AssetImage('assets/images/ikram.png'),
-            ),
-            if (!_compactHeader) const SizedBox(width: 10),
-            if (!_compactHeader)
-              const Text(
-                'ikram ul haq.',
-                style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18),
-              ),
-          ],
-        ),
-        Wrap(
-          crossAxisAlignment: WrapCrossAlignment.center,
-          spacing: 2,
-          children: [
-            if (!_compactHeader)
-              TextButton(
-                onPressed: () => _go(_work),
-                child: const Text('Work'),
-              ),
-            if (!_compactHeader)
-              TextButton(
-                onPressed: () => _go(_about),
-                child: const Text('About'),
-              ),
-            if (_compactHeader)
-              IconButton(
-                tooltip: 'Download resume',
-                onPressed: () => _openContact(resumeUrl),
-                icon: const Icon(Icons.download_outlined, size: 19),
-              )
-            else
-              TextButton.icon(
-                onPressed: () => _openContact(resumeUrl),
-                icon: const Icon(Icons.download_outlined, size: 18),
-                label: const Text('Download resume'),
-              ),
-            Tooltip(
-              message: 'Email',
-              child: _compactHeader
-                  ? IconButton(
-                      onPressed: () =>
-                          _openContact('mailto:emikramulhaq@gmail.com'),
-                      icon: const Icon(Icons.mail_outline, size: 19),
-                    )
-                  : TextButton.icon(
-                      onPressed: () =>
-                          _openContact('mailto:emikramulhaq@gmail.com'),
-                      icon: const Icon(Icons.mail_outline, size: 19),
-                      label: Text(wide ? 'emikramulhaq@gmail.com' : 'Email'),
-                    ),
-            ),
-            IconButton(
-              tooltip: '+92 309 525 1250',
-              onPressed: () => _openContact('tel:+923095251250'),
-              icon: const Icon(Icons.phone_outlined, size: 19),
-            ),
-            IconButton(
-              tooltip: 'GitHub',
-              onPressed: () => _openContact('https://github.com/EMIkram'),
-              icon: const GitHubIcon(),
-            ),
-            IconButton(
-              tooltip: 'LinkedIn',
-              onPressed: () => _openContact(
-                'https://www.linkedin.com/in/muhammad-ikram-ulhaq-a718a9145/',
-              ),
-              icon: Container(
-                width: 19,
-                height: 19,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.onSurface,
-                  borderRadius: BorderRadius.circular(2),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CircleAvatar(
+                  radius: compact ? 14 : 18,
+                  backgroundImage: const AssetImage('assets/images/ikram.png'),
                 ),
-                child: Text(
-                  'in',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.surface,
-                    fontWeight: FontWeight.w900,
-                    fontSize: 15,
-                    height: 1,
+                if (!compact) const SizedBox(width: 10),
+                if (!compact)
+                  const Text(
+                    'ikram ul haq.',
+                    style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18),
+                  ),
+              ],
+            ),
+            const SizedBox(width: 12),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (!compact)
+                  TextButton(
+                    onPressed: () => _go(_work),
+                    child: const Text('Work'),
+                  ),
+                if (!compact)
+                  TextButton(
+                    onPressed: () => _go(_about),
+                    child: const Text('About'),
+                  ),
+                if (compact)
+                  IconButton(
+                    tooltip: 'Download resume',
+                    onPressed: () => _openContact(resumeUrl),
+                    icon: const Icon(Icons.download_outlined, size: 19),
+                  )
+                else
+                  TextButton.icon(
+                    onPressed: () => _openContact(resumeUrl),
+                    icon: const Icon(Icons.download_outlined, size: 18),
+                    label: const Text('Download resume'),
+                  ),
+                Tooltip(
+                  message: 'Email',
+                  child: compact
+                      ? IconButton(
+                          onPressed: () =>
+                              _openContact('mailto:emikramulhaq@gmail.com'),
+                          icon: const Icon(Icons.mail_outline, size: 19),
+                        )
+                      : TextButton.icon(
+                          onPressed: () =>
+                              _openContact('mailto:emikramulhaq@gmail.com'),
+                          icon: const Icon(Icons.mail_outline, size: 19),
+                          label: Text(
+                            wide ? 'emikramulhaq@gmail.com' : 'Email',
+                          ),
+                        ),
+                ),
+                IconButton(
+                  tooltip: '+92 309 525 1250',
+                  onPressed: () => _openContact('tel:+923095251250'),
+                  icon: const Icon(Icons.phone_outlined, size: 19),
+                ),
+                IconButton(
+                  tooltip: 'GitHub',
+                  onPressed: () => _openContact('https://github.com/EMIkram'),
+                  icon: const GitHubIcon(),
+                ),
+                IconButton(
+                  tooltip: 'LinkedIn',
+                  onPressed: () => _openContact(
+                    'https://www.linkedin.com/in/muhammad-ikram-ulhaq-a718a9145/',
+                  ),
+                  icon: Container(
+                    width: 19,
+                    height: 19,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.onSurface,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                    child: Text(
+                      'in',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.surface,
+                        fontWeight: FontWeight.w900,
+                        fontSize: 15,
+                        height: 1,
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ),
-            IconButton(
-              tooltip: Theme.of(context).brightness == Brightness.dark
-                  ? 'Switch to light mode'
-                  : 'Switch to dark mode',
-              onPressed: widget.onToggleTheme,
-              icon: Icon(
-                Theme.of(context).brightness == Brightness.dark
-                    ? Icons.light_mode_outlined
-                    : Icons.dark_mode_outlined,
-                size: 19,
-              ),
+                if (MediaQuery.sizeOf(context).width >=
+                    (compact ? 400 : (wide ? 1100 : 900)))
+                  IconButton(
+                    tooltip: _effectsEnabled
+                        ? 'Turn off cursor effects'
+                        : 'Turn on cursor effects',
+                    onPressed: () {
+                      setState(() => _effectsEnabled = !_effectsEnabled);
+                      if (!_effectsEnabled) _gridPointer.value = null;
+                    },
+                    icon: Icon(
+                      _effectsEnabled
+                          ? Icons.flashlight_on_outlined
+                          : Icons.flashlight_off_outlined,
+                      size: 19,
+                    ),
+                  ),
+                IconButton(
+                  tooltip: Theme.of(context).brightness == Brightness.dark
+                      ? 'Switch to light mode'
+                      : 'Switch to dark mode',
+                  onPressed: widget.onToggleTheme,
+                  icon: Icon(
+                    Theme.of(context).brightness == Brightness.dark
+                        ? Icons.light_mode_outlined
+                        : Icons.dark_mode_outlined,
+                    size: 19,
+                  ),
+                ),
+              ],
             ),
           ],
         ),
-      ],
-    ),
-  );
+      ),
+    );
+  }
 
   Widget _hero(bool wide) {
     final intro = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'SENIOR SOFTWARE ENGINEER · TECH LEAD · AI-NATIVE DEVELOPMENT',
+          'SENIOR SOFTWARE ENGINEER · TECH LEAD · AI ENGINEER',
           style: _eyebrow,
         ),
         const SizedBox(height: 25),
@@ -752,7 +780,7 @@ class _PortfolioPageState extends State<PortfolioPage> {
         ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 470),
           child: Text(
-            'I’m a Senior Software Engineer and Tech Lead, building mobile and web products. With 5+ years in engineering and 3+ years leading teams, I connect hands-on implementation, architecture, and delivery. AI-assisted and agentic development are part of my daily workflow—from planning and implementation to testing and review. I also bring technical leadership and delivery planning to the work. With AI and focused R&D, I’m confident adapting to new technologies and languages.',
+            'I’m a Senior Software Engineer and Tech Lead, building mobile and web products. With 5+ years in engineering and 3+ years leading teams, I connect hands-on implementation, architecture, and delivery. \n\nMy AI engineering focus is agentic software development and AI-assisted delivery. AI-assisted and agentic development are part of my daily workflow—from planning and implementation to testing and review. I also bring technical leadership and delivery planning to the work. With AI and focused R&D, I’m confident adapting to new technologies and languages.',
             style: TextStyle(
               fontSize: 14,
               height: 1.6,
@@ -906,6 +934,28 @@ class _PortfolioPageState extends State<PortfolioPage> {
           ],
           const SizedBox(height: 40),
           const CapabilityPanel(),
+          const SizedBox(height: 24),
+          Text(
+            'How I work with AI · Carpool',
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+          const SizedBox(height: 8),
+          const Text(
+            'My independent Carpool app is a practical setting for AI-assisted, spec-driven development. I use this workflow while retaining ownership of architecture and code quality.',
+            style: TextStyle(height: 1.6),
+          ),
+          const SizedBox(height: 12),
+          const Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              Chip(label: Text('1 · Clarify requirements')),
+              Chip(label: Text('2 · Write a specification')),
+              Chip(label: Text('3 · Implement with coding agents')),
+              Chip(label: Text('4 · Test and review')),
+              Chip(label: Text('5 · Validate and release')),
+            ],
+          ),
         ],
       ),
     );
@@ -1350,8 +1400,8 @@ class _ProjectTileState extends State<ProjectTile> {
               onExit: (_) => setState(() => _hovered = false),
               child: Material(
                 color: Theme.of(context).brightness == Brightness.dark
-                    ? const Color(0xFF292541)
-                    : const Color(0xFFE5E0F4),
+                    ? Color.lerp(widget.project.color, Colors.black, .78)
+                    : widget.project.color,
                 borderRadius: BorderRadius.circular(20),
                 clipBehavior: Clip.antiAlias,
                 child: InkWell(
@@ -1461,6 +1511,20 @@ class _ProjectTileState extends State<ProjectTile> {
                 fontSize: 14,
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              'My contribution',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              widget.project.contribution,
+              style: const TextStyle(fontSize: 13, height: 1.6),
             ),
             const SizedBox(height: 12),
             Text(

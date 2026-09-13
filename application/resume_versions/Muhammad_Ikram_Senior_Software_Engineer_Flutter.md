@@ -7,7 +7,7 @@ Islamabad, Pakistan | +92 309 525 1250 | [emikramulhaq@gmail.com](mailto:emikram
 
 ## Professional profile
 
-Senior Software Engineer with 6+ years of experience, currently working as Tech Lead — Flutter & Mobile/Web Engineering. Bring 2.5 years of team leadership alongside hands-on delivery of Flutter applications for Android, iOS, and web, with additional native iOS experience in Swift and UIKit. Own features from architecture and API integration through testing, release, and production support. Combine strong implementation skills with mentoring and cross-functional delivery, with a strong interest in technical leadership and project management.
+Senior Software Engineer with 5+ years of experience, currently working as Tech Lead — Flutter & Mobile/Web Engineering. Bring 3+ years of team leadership alongside hands-on delivery of Flutter applications for Android, iOS, and web, with additional native iOS experience in Swift and UIKit. Own features from architecture and API integration through testing, release, and production support. Combine strong implementation skills with mentoring and cross-functional delivery, with a strong interest in technical leadership and project management.
 
 ## Core capabilities
 

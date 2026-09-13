@@ -1,23 +1,23 @@
 Muhammad Ikram Ul Haq
 
-Mobile Engineer | iOS and Android | Flutter and Native iOS
+Senior Software Engineer | Tech Lead | AI Engineer
 
-Islamabad, Pakistan | +92 309 525 1250 | emikramulhaq@gmail.com
-LinkedIn | Project portfolio on GitHub | Available for remote work
+Islamabad, Pakistan · +92 309 525 1250
+Email · LinkedIn · GitHub / Projects
+Open to on-site, hybrid and remote opportunities
 
-Professional profile
+SUMMARY
 
-Mobile engineer and tech lead with 5+ years of experience across Flutter, native iOS, and production application delivery. Hands-on experience with Swift, UIKit, iOS concurrency, secure API integrations, and App Store workflows. Contributed to a UK healthcare application serving NHS patients and currently lead Carbee’s Flutter Web team while supporting mobile delivery. Apply AI-agent-assisted and spec-driven development across planning, implementation, testing, and review.
+Senior Software Engineer and Tech Lead with 5+ years in software engineering and 3+ years leading teams across Flutter mobile/web and native iOS. AI engineering focus: applying coding agents, prompt engineering and specification-driven workflows to plan, implement, test and review production software. Combine hands-on architecture with requirements gathering, Jira planning, mentoring and release ownership. Confident adapting to new technologies through focused R&D and careful validation.
 
-Technical skills
+TECHNICAL EXPERTISE
 
-Native iOS: Swift, UIKit, CoreData, UserDefaults, GCD, async/await, APNs, App Store deployment and maintenance.
-Cross-platform: Flutter, Dart, BLoC/Cubit, responsive UI, asynchronous programming and streams.
-Integration: REST APIs, JSON modeling, Firebase, FCM, network interceptors, encryption, centralized error handling, Sqflite and SharedPreferences.
-Architecture and delivery: Clean Architecture, MVVM, SOLID, reusable packages, GitHub Actions, CI/CD, Jira, Kanban, code reviews and mentoring.
-AI-related work: AI-assisted and spec-driven development; project experience with avatar chat and Google ML Kit recognition and translation.
+AI-Native Development: Prompt engineering, agentic coding workflows, AI-assisted planning, spec-driven development, ChatGPT/Codex, test-driven development and human code review.
+Mobile &amp; web: Flutter, Dart, Swift, UIKit, BLoC/Cubit, responsive UI, asynchronous programming and streams.
+Architecture &amp; integration: Clean Architecture, MVVM, SOLID, REST APIs, Firebase, secure networking, centralized error handling and local persistence.
+Delivery &amp; leadership: GitHub Actions, CI/CD, Jira, Kanban, requirements gathering, release management, App Store/Google Play delivery, mentoring and code reviews.
 
-Professional experience
+EXPERIENCE
 
 Techtronix | Tech Lead — Flutter & Mobile/Web Engineering | Mar 2024 – Present
 
@@ -25,7 +25,7 @@ Techtronix | Tech Lead — Flutter & Mobile/Web Engineering | Mar 2024 – Prese
 
 • Build reusable foundations for secure networking, interceptors, centralized errors, request/response tracing, and encryption handling.
 
-• Own CI/CD and release workflows, including GitHub–Jira automation, QA handoffs, validation, and development, QA, staging, and production environments.
+• Gather requirements, plan work in Jira, and own CI/CD, QA handoffs, release validation and deployment across environments.
 
 • Support Android/iOS product delivery, review code, mentor engineers, and apply AI-agent-assisted workflows with structured requirements and implementation plans.
 

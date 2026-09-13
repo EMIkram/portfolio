@@ -5,8 +5,43 @@ class ScreenshotComposition extends StatelessWidget {
   const ScreenshotComposition({super.key, required this.project});
   final Project project;
 
+  (double, double, double, double)? get _phoneCrop => switch (project.name) {
+    'Whatsinit' => (200, 355, 8, 22),
+    'My Treats' => (392, 696, 24, 18),
+    'Carpool' => (266, 592, 0, 24),
+    _ => null,
+  };
+
   Widget _screen(int i) {
     final screen = project.screens[i];
+    final crop = _phoneCrop;
+    if (crop != null) {
+      final height = crop.$2 - crop.$3 - crop.$4;
+      return FittedBox(
+        fit: BoxFit.cover,
+        child: SizedBox(
+          width: crop.$1,
+          height: height,
+          child: ClipRect(
+            child: Stack(
+              children: [
+                Positioned(
+                  left: 0,
+                  top: -crop.$3,
+                  width: crop.$1,
+                  height: crop.$2,
+                  child: ScreenshotImage(
+                    screen.$2,
+                    fit: BoxFit.fill,
+                    semanticLabel: screen.$1,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
     if (project.name == 'Dr.iQ' && (i == 1 || i == 2)) {
       return FittedBox(
         fit: BoxFit.contain,
@@ -44,6 +79,21 @@ class ScreenshotComposition extends StatelessWidget {
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     final features = switch (project.name) {
+      'AMS' => [
+        'Attendance dashboard & history',
+        'Leave requests',
+        'Salary slips',
+      ],
+      'Sabzi Shop' => [
+        'Fresh vegetable shopping',
+        'Product catalog & cart',
+        'Doorstep delivery',
+      ],
+      'PSX Ascend' => [
+        'Inventory & vehicle details',
+        'Customer & sales workflows',
+        'Appraisals & appointments',
+      ],
       'Carbee' => [
         'Customer & dealer apps',
         'Admin & dealership portals',
@@ -61,6 +111,11 @@ class ScreenshotComposition extends StatelessWidget {
         'Symptom diaries',
       ],
       'My Treats' => ['Browse the menu', 'Place an order', 'Delivery journeys'],
+      'Invoice Labs' => [
+        'Revenue overview',
+        'Invoices & documents',
+        'Business workflows',
+      ],
       'LSUK' => ['Interpreter jobs', 'Timesheets', 'Service workflows'],
       _ => ['Ingredient discovery', 'Search & browse', 'Mobile experience'],
     };
@@ -78,7 +133,10 @@ class ScreenshotComposition extends StatelessWidget {
                       Flexible(
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 6),
-                          child: PhonePreview(child: _screen(i)),
+                          child: switch (project.name) {
+                            'Sabzi Shop' || 'LSUK' || 'AMS' => _screen(i),
+                            _ => PhonePreview(child: _screen(i)),
+                          },
                         ),
                       ),
                   ],
@@ -622,28 +680,34 @@ class _ScreenshotImageState extends State<ScreenshotImage> {
 }
 
 class PhonePreview extends StatelessWidget {
-  const PhonePreview({super.key, required this.child});
+  const PhonePreview({super.key, required this.child, this.aspectRatio = .46});
+  final double aspectRatio;
   final Widget child;
   @override
   Widget build(BuildContext context) => AspectRatio(
-    aspectRatio: .46,
-    child: Container(
-      padding: const EdgeInsets.all(4),
-      decoration: BoxDecoration(
-        color: const Color(0xFF20212A),
-        borderRadius: BorderRadius.circular(18),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x22000000),
-            blurRadius: 12,
-            offset: Offset(0, 5),
+    aspectRatio: aspectRatio,
+    child: LayoutBuilder(
+      builder: (context, constraints) {
+        final scale = (constraints.maxWidth / 120).clamp(0.0, 1.0);
+        return Container(
+          padding: EdgeInsets.all(4 * scale),
+          decoration: BoxDecoration(
+            color: const Color(0xFF20212A),
+            borderRadius: BorderRadius.circular(18 * scale),
+            boxShadow: const [
+              BoxShadow(
+                color: Color(0x22000000),
+                blurRadius: 12,
+                offset: Offset(0, 5),
+              ),
+            ],
           ),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(14),
-        child: ColoredBox(color: Colors.white, child: child),
-      ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(14 * scale),
+            child: ColoredBox(color: Colors.white, child: child),
+          ),
+        );
+      },
     ),
   );
 }

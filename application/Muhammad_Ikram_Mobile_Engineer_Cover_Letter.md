@@ -7,7 +7,7 @@ LinkedIn | Project portfolio on GitHub | Available for remote work
 
 Dear Hiring Team,
 
-I’m applying for your remote Mobile Engineer position. I bring 6+ years of mobile development experience, combining Flutter delivery for Android and iOS with native iOS work in Swift and UIKit. Your focus on reliable mobile applications and AI-powered experiences is closely aligned with the products I have worked on and the engineering practices I use today.
+I’m applying for your remote Mobile Engineer position. I bring 5+ years of mobile development experience, combining Flutter delivery for Android and iOS with native iOS work in Swift and UIKit. Your focus on reliable mobile applications and AI-powered experiences is closely aligned with the products I have worked on and the engineering practices I use today.
 
 At AT-Tech, I worked with the iOS team on Dr.iQ, a production healthcare application serving NHS patients. I enhanced features and modules and contributed to a major architecture refactor. My iOS experience includes concurrency with GCD and async/await, persistence, notifications, and App Store deployment and maintenance workflows.
 

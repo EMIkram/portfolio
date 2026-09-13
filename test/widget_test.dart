@@ -5,6 +5,42 @@ import 'package:portfolio_flutter/portfolio_data.dart';
 import 'package:portfolio_flutter/screenshot_gallery.dart';
 
 void main() {
+  testWidgets('Effects icon responds to available width', (tester) async {
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    tester.view.physicalSize = const Size(420, 800);
+    await tester.pumpWidget(const MyApp());
+    await tester.pumpAndSettle();
+    expect(find.byTooltip('Turn off cursor effects'), findsOneWidget);
+    tester.view.physicalSize = const Size(320, 800);
+    await tester.pumpAndSettle();
+    expect(find.byTooltip('Turn off cursor effects'), findsNothing);
+    for (final label in ['Email', 'GitHub', 'LinkedIn', 'Download resume']) {
+      expect(find.byTooltip(label), findsOneWidget);
+    }
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('Phone header stays in one row at 320 pixels', (tester) async {
+    tester.view.physicalSize = const Size(320, 800);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    await tester.pumpWidget(const MyApp());
+    await tester.pumpAndSettle();
+    final resumeY = tester.getCenter(find.byTooltip('Download resume')).dy;
+    for (final label in [
+      'GitHub',
+      'LinkedIn',
+      'Email',
+      'Switch to dark mode',
+    ]) {
+      expect(tester.getCenter(find.byTooltip(label)).dy, closeTo(resumeY, 1));
+    }
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('Header compacts while scrolling and expands at the top', (
     tester,
   ) async {
@@ -62,6 +98,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Download resume'), findsOneWidget);
     expect(resumeUrl, isNotEmpty);
+    expect(find.byTooltip('Turn off cursor effects'), findsNothing);
     for (final label in ['Email', 'GitHub', 'LinkedIn']) {
       expect(find.byTooltip(label), findsOneWidget);
     }
@@ -84,7 +121,9 @@ void main() {
       MaterialApp(
         home: Scaffold(
           body: SingleChildScrollView(
-            child: CarbeeScreenWall(project: projects.first),
+            child: CarbeeScreenWall(
+              project: projects.firstWhere((project) => project.name == 'Carbee'),
+            ),
           ),
         ),
       ),
@@ -219,7 +258,9 @@ void main() {
       MaterialApp(
         home: Scaffold(
           body: SingleChildScrollView(
-            child: ScreenshotGallery(project: projects.first),
+            child: ScreenshotGallery(
+              project: projects.firstWhere((project) => project.name == 'Carbee'),
+            ),
           ),
         ),
       ),

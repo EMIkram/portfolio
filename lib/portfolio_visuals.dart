@@ -59,8 +59,8 @@ class CapabilityPanel extends StatelessWidget {
     const groups = [
       (
         Icons.auto_awesome_outlined,
-        'AI & engineering quality',
-        'Agentic AI · Spec-driven development · TDD · Code review',
+        'AI-Native Development & Quality',
+        'Prompt engineering · Agentic AI · Spec-driven development · TDD',
         'Structured planning, AI-assisted implementation, and test-driven development.',
       ),
       (

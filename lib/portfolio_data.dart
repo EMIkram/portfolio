@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
 const projectIcons = {
+  'AMS': 'assets/images/icon-ams.png',
+  'Sabzi Shop': 'assets/images/icon-sabzi-shop.jpg',
+  'PSX Ascend': 'assets/images/icon-psx-ascend.jpg',
   'Carbee': 'assets/images/icon-carbee.webp',
   'Carpool': 'assets/images/icon-carpool.webp',
   'Dr.iQ': 'assets/images/driq-logo.png',
@@ -16,6 +19,20 @@ const projectIcons = {
 };
 
 const projectLinks = <String, List<(String, String)>>{
+  'Sabzi Shop': [
+    (
+      'Google Play',
+      'https://play.google.com/store/apps/details?id=com.sabzishop.sbs&hl=en',
+    ),
+    ('App Store', 'https://apps.apple.com/us/app/sabzi-shop/id6757521101'),
+  ],
+  'PSX Ascend': [
+    (
+      'Google Play',
+      'https://play.google.com/store/apps/details?id=com.psxascend.app&hl=en',
+    ),
+    ('App Store', 'https://apps.apple.com/us/app/psxascend/id1547303438'),
+  ],
   'Carpool': [
     (
       'Google Play',
@@ -87,9 +104,20 @@ const projectLinks = <String, List<(String, String)>>{
     ),
   ],
   'Invoice Labs': [
-    ('Project listing', 'https://www.thegreatapps.com/apps/invoicelabs'),
+    (
+      'Google Play',
+      'https://play.google.com/store/apps/details?id=io.invoicelabs.app',
+    ),
+    ('Website', 'https://www.invoicelabs.io/'),
   ],
-  'AMS': [('GitHub', 'https://github.com/EMIkram/face_n_qr_recognition')],
+  'AMS': [
+    (
+      'Google Play',
+      'https://play.google.com/store/apps/details?id=com.smartattendance.sbs&hl=en',
+    ),
+    ('App Store', 'https://apps.apple.com/us/app/smart-attendance-sbs/id6446618329'),
+    ('GitHub', 'https://github.com/EMIkram/face_n_qr_recognition'),
+  ],
   'Sterna Search': [
     (
       'Google Play',
@@ -247,6 +275,27 @@ const projects = [
     ],
   ),
   Project(
+    'PSX Ascend',
+    'POWERSPORTS · ANDROID & iOS',
+    'Dealership operations, from anywhere.',
+    'Worked on the iOS app, then led the team through a full migration to Flutter for Android and iOS. Managed the BLoC architecture and state management, using Cursor AI agents to support the migration. Subsequently delivered new features and a complete UI revamp.',
+    Color(0xFFDDF3FA),
+    Icons.storefront_outlined,
+    ['Flutter', 'BLoC', 'Team leadership', 'Cursor AI'],
+    mobile: true,
+    link: 'https://apps.apple.com/us/app/psxascend/id1547303438',
+    source: 'Screenshots from the official App Store listing.',
+    screens: [
+      ('Vehicle details', 'assets/images/psx-ascend-2.jpg'),
+      ('Dashboard and schedule', 'assets/images/psx-ascend-0.jpg'),
+      ('Inventory search', 'assets/images/psx-ascend-1.jpg'),
+      ('Customer interests', 'assets/images/psx-ascend-3.jpg'),
+      ('Sales actions', 'assets/images/psx-ascend-4.jpg'),
+      ('Saved appraisals', 'assets/images/psx-ascend-5.jpg'),
+      ('Profile and settings', 'assets/images/psx-ascend-6.jpg'),
+    ],
+  ),
+  Project(
     'Carpool',
     'MOBILITY · ANDROID',
     'Shared journeys. Better connections.',
@@ -293,7 +342,7 @@ const projects = [
     'DIGITAL HEALTH · MOBILE',
     'A clearer picture of everyday wellbeing.',
     'Worked on Ayuda Health, a healthcare solution for patient engagement and appointment booking. The product brings medication reminders, symptom diaries, and health readings together in one mobile experience.',
-    Color(0xFFE6E2F2),
+    Color(0xFFD6E9FA),
     Icons.health_and_safety_outlined,
     ['Healthcare', 'Patient engagement', 'Mobile'],
     mobile: true,
@@ -304,23 +353,6 @@ const projects = [
       ('Vitals dashboard', 'assets/images/ayuda-vitals.jpg'),
       ('Medication reminders', 'assets/images/ayuda-reminders.jpg'),
       ('Symptom diary', 'assets/images/ayuda-diary.jpg'),
-    ],
-  ),
-  Project(
-    'Whatsinit',
-    'FOOD DISCOVERY · MOBILE',
-    'A little more knowledge in every bite.',
-    'Built the application from scratch to help people discover the ingredients in their food.',
-    Color(0xFFE7EBCF),
-    Icons.eco_rounded,
-    ['Built from scratch', 'Food discovery', 'Mobile'],
-    mobile: true,
-    link: 'https://www.producthunt.com/products/whatsinit',
-    source: 'Screenshots from my GitHub project showcase.',
-    screens: [
-      ('Ingredient search', 'assets/images/whatsinit-0.png'),
-      ('Browse ingredients', 'assets/images/whatsinit-1.png'),
-      ('Ingredient details', 'assets/images/whatsinit-2.png'),
     ],
   ),
   Project(
@@ -364,9 +396,71 @@ const projects = [
       ('Services', 'assets/images/lsuk-5.webp'),
     ],
   ),
+  Project(
+    'Invoice Labs',
+    'BUSINESS TOOLS · MOBILE & DESKTOP',
+    'Invoicing and business management, in one place.',
+    'Led the migration from native Android to Flutter for Android, iOS, and Linux, including local storage, invoicing, and PDF generation. Delivered a stable Google Play release and mentored developers through implementation and review.',
+    Color(0xFFFFE4D1),
+    Icons.receipt_long_outlined,
+    ['Flutter', 'Invoicing', 'PDF generation', 'Local storage'],
+    mobile: true,
+    link: 'https://play.google.com/store/apps/details?id=io.invoicelabs.app',
+    source: 'Screenshots of the Invoice Labs app.',
+    screens: [
+      ('Invoice editor', 'assets/images/invoicelabs-editor.png'),
+      ('Template selection', 'assets/images/invoicelabs-template.png'),
+    ],
+  ),
+  Project(
+    'Sabzi Shop',
+    'GROCERY SHOPPING · ANDROID & iOS',
+    'Fresh vegetables, delivered to your doorstep.',
+    'Built Sabzi Shop from scratch and deployed it to Google Play and the App Store, taking the app from initial development through to release on Android and iOS.',
+    Color(0xFFA8DDBB),
+    Icons.local_grocery_store_outlined,
+    ['Android & iOS', 'E-commerce', 'Built from scratch', 'Store deployment'],
+    mobile: true,
+    link: 'https://play.google.com/store/apps/details?id=com.sabzishop.sbs&hl=en',
+    source: 'Screenshots from the official App Store listing.',
+    screens: [
+      ('Product catalog', 'assets/images/sabzi-shop-5.jpg'),
+      ('Create an account', 'assets/images/sabzi-shop-3.jpg'),
+      ('Home and categories', 'assets/images/sabzi-shop-4.jpg'),
+      ('Delivery introduction', 'assets/images/sabzi-shop-2.jpg'),
+      ('Welcome to Sabzi Shop', 'assets/images/sabzi-shop-0.jpg'),
+      ('Daily vegetable shopping', 'assets/images/sabzi-shop-1.jpg'),
+    ],
+  ),
+  Project(
+    'AMS',
+    'ATTENDANCE & HR · ANDROID & iOS',
+    'Smart Attendance SBS — attendance, leave, and payroll.',
+    'Worked on attendance using face and QR recognition.',
+    Color(0xFFF0F4FA),
+    Icons.qr_code_scanner_rounded,
+    ['Face recognition', 'QR recognition', 'Attendance'],
+    mobile: true,
+    link: 'https://play.google.com/store/apps/details?id=com.smartattendance.sbs&hl=en',
+    source: 'Screenshots from the official Google Play listing.',
+    screens: [
+      ('Attendance dashboard', 'assets/images/ams-2.png'),
+      ('Attendance history', 'assets/images/ams-6.png'),
+      ('Leave request', 'assets/images/ams-3.png'),
+      ('Salary slip', 'assets/images/ams-4.png'),
+      ('Employee profile', 'assets/images/ams-5.png'),
+      ('Welcome', 'assets/images/ams-0.png'),
+      ('Organization login', 'assets/images/ams-1.png'),
+    ],
+  ),
 ];
 
 const additionalProjects = [
+  (
+    'Whatsinit',
+    'Built the application from scratch to help people discover the ingredients in their food.',
+    Icons.eco_rounded,
+  ),
   (
     'Afterlife AI',
     'Worked on an AI application for creating avatars and chatting with public avatars.',
@@ -388,19 +482,9 @@ const additionalProjects = [
     Icons.recycling_outlined,
   ),
   (
-    'Invoice Labs',
-    'Led the migration from native Android to Flutter for Android, iOS, and Linux, including local storage, invoicing, and PDF generation.',
-    Icons.receipt_long_outlined,
-  ),
-  (
     'Cam translator',
     'Camera-based recognition and translation with Google ML Kit.',
     Icons.camera_alt_outlined,
-  ),
-  (
-    'AMS',
-    'Attendance using face and QR recognition.',
-    Icons.qr_code_scanner_rounded,
   ),
   (
     'Sterna Search',
