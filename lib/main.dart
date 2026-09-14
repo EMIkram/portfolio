@@ -264,7 +264,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  ThemeMode _mode = ThemeMode.light;
+  ThemeMode _mode = ThemeMode.system;
   ThemeData _theme(Brightness brightness) => ThemeData(
     useMaterial3: true,
     brightness: brightness,
@@ -281,7 +281,7 @@ class _MyAppState extends State<MyApp> {
   );
   @override
   Widget build(BuildContext context) => MaterialApp(
-    title: 'Ikram Ul Haq — Flutter & iOS Developer',
+    title: 'Muhammad Ikram — Sr. Flutter Dev | iOS Dev | Team Lead',
     debugShowCheckedModeBanner: false,
     theme: _theme(Brightness.light),
     darkTheme: _theme(Brightness.dark),
