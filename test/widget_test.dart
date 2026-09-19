@@ -122,7 +122,9 @@ void main() {
         home: Scaffold(
           body: SingleChildScrollView(
             child: CarbeeScreenWall(
-              project: projects.firstWhere((project) => project.name == 'Carbee'),
+              project: projects.firstWhere(
+                (project) => project.name == 'Carbee',
+              ),
             ),
           ),
         ),
@@ -215,7 +217,7 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text('My contribution'), findsOneWidget);
       expect(
-        find.textContaining('Primary owner of the Carbee'),
+        find.textContaining('Delivered and continue to maintain Carbee'),
         findsOneWidget,
       );
       await tester.tap(find.byTooltip('Close project'));
@@ -259,7 +261,9 @@ void main() {
         home: Scaffold(
           body: SingleChildScrollView(
             child: ScreenshotGallery(
-              project: projects.firstWhere((project) => project.name == 'Carbee'),
+              project: projects.firstWhere(
+                (project) => project.name == 'Carbee',
+              ),
             ),
           ),
         ),

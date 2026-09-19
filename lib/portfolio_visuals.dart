@@ -59,8 +59,8 @@ class CapabilityPanel extends StatelessWidget {
     const groups = [
       (
         Icons.auto_awesome_outlined,
-        'AI-Native Development & Quality',
-        'Prompt engineering · Agentic AI · Spec-driven development · TDD',
+        'Spec-driven development & quality',
+        'OpenSpec · Coding agents · Specifications · Code review',
         'Structured planning, AI-assisted implementation, and test-driven development.',
       ),
       (
@@ -122,8 +122,8 @@ class CapabilityPanel extends StatelessWidget {
               (Icons.apple, 'iOS'),
               (Icons.local_fire_department, 'Firebase'),
               (Icons.sync, 'CI/CD'),
-              (Icons.auto_awesome, 'Agentic AI'),
-              (Icons.auto_awesome_outlined, 'LLM driven development'),
+              (Icons.auto_awesome, 'OpenSpec'),
+              (Icons.auto_awesome_outlined, 'Spec-driven development'),
               (Icons.fact_check_outlined, 'TDD'),
             ])
               Chip(

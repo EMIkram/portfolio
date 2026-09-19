@@ -15,8 +15,7 @@ const muted = Color(0xFF74736F);
 
 const resumeUrl = String.fromEnvironment(
   'RESUME_URL',
-  defaultValue:
-      'https://drive.google.com/file/d/1BRhQyEfJkDq_yQIyYkrrBtlRIhL33RsP/view?usp=sharing',
+  defaultValue: 'resume.pdf',
 );
 
 void main() => runApp(const MyApp());
@@ -432,7 +431,16 @@ class _PortfolioPageState extends State<PortfolioPage> {
                                         spacing: 24,
                                         runSpacing: 32,
                                         children: [
-                                          for (final i in [1, 2, 8, 4, 5, 6, 7, 9])
+                                          for (final i in [
+                                            1,
+                                            2,
+                                            8,
+                                            4,
+                                            5,
+                                            6,
+                                            7,
+                                            9,
+                                          ])
                                             SizedBox(
                                               width: width,
                                               child: _project(i, 270),
@@ -753,7 +761,7 @@ class _PortfolioPageState extends State<PortfolioPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'SENIOR SOFTWARE ENGINEER · TECH LEAD · AI ENGINEER',
+          'SENIOR SOFTWARE ENGINEER · TEAM LEAD · SPEC-DRIVEN DEVELOPMENT',
           style: _eyebrow,
         ),
         const SizedBox(height: 25),
@@ -780,7 +788,7 @@ class _PortfolioPageState extends State<PortfolioPage> {
         ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 470),
           child: Text(
-            'I’m a Senior Software Engineer and Tech Lead, building mobile and web products. With 5+ years in engineering and 3+ years leading teams, I connect hands-on implementation, architecture, and delivery. \n\nMy AI engineering focus is agentic software development and AI-assisted delivery. AI-assisted and agentic development are part of my daily workflow—from planning and implementation to testing and review. I also bring technical leadership and delivery planning to the work. With AI and focused R&D, I’m confident adapting to new technologies and languages.',
+            'I’m a Senior Software Engineer and Team Lead with six years of Flutter experience, including three years leading development. I build and maintain mobile and web products, taking ownership of architecture, requirements, QA coordination, and releases. \n\nI use OpenSpec for spec-driven development in my work at Carbee and recent freelance contributions to PSX Ascend. I define requirements and implementation tasks before working with coding agents, then review and validate the result. I have also researched BMAD Method and GitHub Spec Kit to compare their approaches to planning and implementation.',
             style: TextStyle(
               fontSize: 14,
               height: 1.6,
@@ -865,7 +873,7 @@ class _PortfolioPageState extends State<PortfolioPage> {
           ),
           const SizedBox(height: 24),
           for (final item in [
-            ('5+', 'Years in software engineering'),
+            ('6', 'Years of Flutter development'),
             ('3+', 'Years leading teams'),
             ('15+', 'Apps built & contributed to'),
           ])
@@ -936,12 +944,12 @@ class _PortfolioPageState extends State<PortfolioPage> {
           const CapabilityPanel(),
           const SizedBox(height: 24),
           Text(
-            'How I work with AI · Carpool',
+            'Spec-driven development · OpenSpec',
             style: Theme.of(context).textTheme.titleMedium,
           ),
           const SizedBox(height: 8),
           const Text(
-            'My independent Carpool app is a practical setting for AI-assisted, spec-driven development. I use this workflow while retaining ownership of architecture and code quality.',
+            'I use OpenSpec on recent Carbee and freelance PSX Ascend features, and apply spec-driven development in personal projects. Specifications guide implementation; code review and QA validate the result. BMAD Method and GitHub Spec Kit are researched approaches, not claimed production experience.',
             style: TextStyle(height: 1.6),
           ),
           const SizedBox(height: 12),
@@ -1183,7 +1191,7 @@ class _PortfolioPageState extends State<PortfolioPage> {
         for (final role in [
           (
             'Techtronix',
-            'Tech Lead — Flutter & Mobile/Web Engineering',
+            'Team Lead — Flutter & Mobile/Web Engineering',
             'MAR 2024 — PRESENT',
             'assets/images/company-techtronix.png',
           ),

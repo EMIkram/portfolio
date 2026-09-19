@@ -95,9 +95,9 @@ class ScreenshotComposition extends StatelessWidget {
         'Appraisals & appointments',
       ],
       'Carbee' => [
-        'Customer & dealer apps',
-        'Admin & dealership portals',
-        'Shared design foundations',
+        'Spec-driven development',
+        'Flutter · BLoC · OpenSpec',
+        'Figma MCP · Shared foundations',
       ],
       'Dr.iQ' => ['Online consultations', 'Appointments', 'Repeat medication'],
       'Carpool' => [

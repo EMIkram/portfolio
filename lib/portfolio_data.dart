@@ -115,7 +115,10 @@ const projectLinks = <String, List<(String, String)>>{
       'Google Play',
       'https://play.google.com/store/apps/details?id=com.smartattendance.sbs&hl=en',
     ),
-    ('App Store', 'https://apps.apple.com/us/app/smart-attendance-sbs/id6446618329'),
+    (
+      'App Store',
+      'https://apps.apple.com/us/app/smart-attendance-sbs/id6446618329',
+    ),
     ('GitHub', 'https://github.com/EMIkram/face_n_qr_recognition'),
   ],
   'Sterna Search': [
@@ -158,10 +161,10 @@ const projects = [
     'Carbee',
     'AUTOMOTIVE · MOBILE & WEB',
     'How we buy and sell cars now.',
-    'Primary owner of the Carbee Admin and Dealer portals at Techtronix. Built the dealership web portal and led feature delivery, architecture, backend integration, multi-environment support, and release workflows.',
+    'Delivered and continue to maintain Carbee’s dealership and admin portals at Techtronix, shipping new modules with Flutter and BLoC. Recent development uses OpenSpec to define requirements and implementation tasks before coding, followed by code review and QA validation.',
     Color(0xFFFFEBB8),
     Icons.directions_car_rounded,
-    ['Flutter Web', 'Architecture', 'CI/CD'],
+    ['Flutter Web', 'BLoC', 'OpenSpec · SDD', 'CI/CD'],
     link: 'https://carbee.com.au',
     screens: [
       ('Admin · Overview', 'assets/images/carbee-admin-overview.png'),
@@ -246,14 +249,14 @@ const projects = [
       ),
       (
         'Admin & dealership portals',
-        'Primary ownership of large-scale Flutter Web portals, with dealership delivery from the ground up and ongoing admin development.',
+        'Delivered both portals and continue to maintain them and ship new modules. Own requirements/design alignment, implementation, QA coordination, and releases.',
       ),
       (
         'Analytics & operational workflows',
         'Dashboards, lead insights, vehicle listings, QR statistics, notifications, and billing workflows across the product.',
       ),
       (
-        'E2E encryption & API integration',
+        'Encryption & API integration',
         'Encrypted communication handling, network interceptors, centralized errors, and request/response tracing.',
       ),
       (
@@ -266,7 +269,15 @@ const projects = [
       ),
       (
         'Carbee foundations',
-        'A shared visual language for colors, typography, buttons, fields, and icons, illustrated by the foundations screen.',
+        'Created carbee_foundation using spec-driven development. Used Figma MCP to translate design foundations into Flutter typography, theming, and reusable UI components.',
+      ),
+      (
+        'Custom responsive layouts',
+        'Built a custom screen-responsiveness solution tailored to Carbee’s layouts and requirements.',
+      ),
+      (
+        'Spec-driven development',
+        'Use OpenSpec for recent features to define requirements and implementation tasks, guide coding agents, and validate changes through code review and QA.',
       ),
       (
         'Technical leadership',
@@ -278,10 +289,10 @@ const projects = [
     'PSX Ascend',
     'POWERSPORTS · ANDROID & iOS',
     'Dealership operations, from anywhere.',
-    'Worked on the iOS app, then led the team through a full migration to Flutter for Android and iOS. Managed the BLoC architecture and state management, using Cursor AI agents to support the migration. Subsequently delivered new features and a complete UI revamp.',
+    'Worked on the iOS app and led its migration to Flutter for Android and iOS using BLoC. Later freelance contributions include new features and a UI revamp. Use OpenSpec for recent feature development to define requirements and implementation tasks before coding, review, and validation.',
     Color(0xFFDDF3FA),
     Icons.storefront_outlined,
-    ['Flutter', 'BLoC', 'Team leadership', 'Cursor AI'],
+    ['Flutter', 'BLoC', 'OpenSpec · SDD', 'Freelance'],
     mobile: true,
     link: 'https://apps.apple.com/us/app/psxascend/id1547303438',
     source: 'Screenshots from the official App Store listing.',
@@ -299,10 +310,16 @@ const projects = [
     'Carpool',
     'MOBILITY · ANDROID',
     'Shared journeys. Better connections.',
-    'Independently developed and maintain Carpool, a live Flutter/Android product connecting drivers and riders. I use it to apply AI-agent-assisted, spec-driven development across requirements, architecture, implementation, release, and iteration.',
+    'Co-founder of Carpool, a live Flutter/Android product connecting drivers and riders. Contribute to its development and ongoing maintenance. I use it to apply AI-agent-assisted, spec-driven development across requirements, architecture, implementation, release, and iteration.',
     Color(0xFFD5EDE7),
     Icons.route_rounded,
-    ['Flutter', 'Android', 'Independent delivery', 'AI-assisted development'],
+    [
+      'GetX',
+      'Flutter',
+      'Android',
+      'Co-founder',
+      'AI-assisted development',
+    ],
     mobile: true,
     link:
         'https://play.google.com/store/apps/details?id=com.carpoolingpk.carpool&hl=en',
@@ -344,7 +361,7 @@ const projects = [
     'Worked on Ayuda Health, a healthcare solution for patient engagement and appointment booking. The product brings medication reminders, symptom diaries, and health readings together in one mobile experience.',
     Color(0xFFD6E9FA),
     Icons.health_and_safety_outlined,
-    ['Healthcare', 'Patient engagement', 'Mobile'],
+    ['Flutter', 'BLoC/Cubit', 'Healthcare'],
     mobile: true,
     link: 'https://ayudahealth.com/',
     source:
@@ -362,7 +379,7 @@ const projects = [
     'Worked on restaurant ordering and delivery applications for My Treats in Bristol. The restaurant website is linked as business context; my contribution was to the mobile apps.',
     Color(0xFFF3E3D3),
     Icons.restaurant_outlined,
-    ['Flutter', 'Food ordering', 'Delivery'],
+    ['GetX', 'Flutter', 'Food ordering', 'Delivery'],
     mobile: true,
     link: 'https://apps.apple.com/gb/app/my-treats/id1553674065',
     source: 'Screenshots from the UK App Store listing.',
@@ -382,7 +399,7 @@ const projects = [
     'Contributed to interpreter workflows, distance calculation, and interface improvements for Language Services UK. The app helps registered interpreters manage assignments, timesheets, messages, and payment records.',
     Color(0xFFD9EAF3),
     Icons.translate_rounded,
-    ['Flutter', 'Interpreter workflows', 'Mobile'],
+    ['GetX', 'Flutter', 'Interpreter workflows', 'Mobile'],
     mobile: true,
     link: 'https://play.google.com/store/apps/details?id=com.org.lsuk',
     source:
@@ -403,7 +420,7 @@ const projects = [
     'Led the migration from native Android to Flutter for Android, iOS, and Linux, including local storage, invoicing, and PDF generation. Delivered a stable Google Play release and mentored developers through implementation and review.',
     Color(0xFFFFE4D1),
     Icons.receipt_long_outlined,
-    ['Flutter', 'Invoicing', 'PDF generation', 'Local storage'],
+    ['GetX', 'Flutter', 'Invoicing', 'PDF generation', 'Local storage'],
     mobile: true,
     link: 'https://play.google.com/store/apps/details?id=io.invoicelabs.app',
     source: 'Screenshots of the Invoice Labs app.',
@@ -419,9 +436,16 @@ const projects = [
     'Built Sabzi Shop from scratch and deployed it to Google Play and the App Store, taking the app from initial development through to release on Android and iOS.',
     Color(0xFFA8DDBB),
     Icons.local_grocery_store_outlined,
-    ['Android & iOS', 'E-commerce', 'Built from scratch', 'Store deployment'],
+    [
+      'GetX',
+      'Android & iOS',
+      'E-commerce',
+      'Built from scratch',
+      'Store deployment',
+    ],
     mobile: true,
-    link: 'https://play.google.com/store/apps/details?id=com.sabzishop.sbs&hl=en',
+    link:
+        'https://play.google.com/store/apps/details?id=com.sabzishop.sbs&hl=en',
     source: 'Screenshots from the official App Store listing.',
     screens: [
       ('Product catalog', 'assets/images/sabzi-shop-5.jpg'),
@@ -439,9 +463,10 @@ const projects = [
     'Worked on attendance using face and QR recognition.',
     Color(0xFFF0F4FA),
     Icons.qr_code_scanner_rounded,
-    ['Face recognition', 'QR recognition', 'Attendance'],
+    ['GetX', 'Face recognition', 'QR recognition', 'Attendance'],
     mobile: true,
-    link: 'https://play.google.com/store/apps/details?id=com.smartattendance.sbs&hl=en',
+    link:
+        'https://play.google.com/store/apps/details?id=com.smartattendance.sbs&hl=en',
     source: 'Screenshots from the official Google Play listing.',
     screens: [
       ('Attendance dashboard', 'assets/images/ams-2.png'),
@@ -458,42 +483,42 @@ const projects = [
 const additionalProjects = [
   (
     'Whatsinit',
-    'Built the application from scratch to help people discover the ingredients in their food.',
+    'Built the application from scratch to help people discover the ingredients in their food. Built with Flutter and GetX.',
     Icons.eco_rounded,
   ),
   (
     'Afterlife AI',
-    'Worked on an AI application for creating avatars and chatting with public avatars.',
+    'Worked on an AI application for creating avatars and chatting with public avatars. Built with Flutter and GetX.',
     Icons.auto_awesome_outlined,
   ),
   (
     'Muslim World 360',
-    'Prayer times, Quran and Hadith reading, and searchable content for Android and iOS.',
+    'Prayer times, Quran and Hadith reading, and searchable content for Android and iOS. Built with Flutter and GetX.',
     Icons.nights_stay_outlined,
   ),
   (
     'Shirleys',
-    'E-commerce clothing application for browsing and purchasing clothes.',
+    'E-commerce clothing application for browsing and purchasing clothes. Built with Flutter and GetX.',
     Icons.shopping_bag_outlined,
   ),
   (
     'Load a Trash',
-    'A UK application connecting people with useful unwanted items to buyers.',
+    'A UK application connecting people with useful unwanted items to buyers. Built with Flutter and GetX.',
     Icons.recycling_outlined,
   ),
   (
     'Cam translator',
-    'Camera-based recognition and translation with Google ML Kit.',
+    'Camera-based recognition and translation with Google ML Kit. Built with Flutter and GetX.',
     Icons.camera_alt_outlined,
   ),
   (
     'Sterna Search',
-    'Search and travel application.',
+    'Search and travel application. Built with Flutter and GetX.',
     Icons.travel_explore_rounded,
   ),
   (
     'Family Tutor',
-    'An educational hub for tutors and students.',
+    'An educational hub for tutors and students. Built with Flutter and GetX.',
     Icons.school_outlined,
   ),
 ];
