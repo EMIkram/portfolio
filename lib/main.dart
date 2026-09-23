@@ -406,50 +406,29 @@ class _PortfolioPageState extends State<PortfolioPage> {
                                     ),
                                   ),
                                   const SizedBox(height: 24),
-                                  _project(0, wide ? 440 : 330),
-                                  const SizedBox(height: 32),
-                                  CarbeeScreenWall(
-                                    project: projects.firstWhere(
-                                      (project) => project.name == 'Carbee',
+                                  for (final entry in [
+                                    0,
+                                    3,
+                                    10,
+                                    1,
+                                    2,
+                                    8,
+                                    4,
+                                    5,
+                                    6,
+                                    7,
+                                    9,
+                                  ].asMap().entries) ...[
+                                    ProjectTile(
+                                      project: projects[entry.value],
+                                      index: entry.key,
+                                      height: wide ? 500 : 340,
+                                      scroll: _scroll,
+                                      onTap: () =>
+                                          _showProject(projects[entry.value]),
                                     ),
-                                  ),
-                                  const SizedBox(height: 32),
-                                  _project(3, 280),
-                                  const SizedBox(height: 36),
-                                  LayoutBuilder(
-                                    builder: (context, bounds) {
-                                      final columns = bounds.maxWidth >= 1100
-                                          ? 3
-                                          : bounds.maxWidth >= 650
-                                          ? 2
-                                          : 1;
-                                      final width =
-                                          (bounds.maxWidth -
-                                              (columns - 1) * 24) /
-                                          columns;
-                                      return Wrap(
-                                        spacing: 24,
-                                        runSpacing: 32,
-                                        children: [
-                                          for (final i in [
-                                            1,
-                                            2,
-                                            8,
-                                            4,
-                                            5,
-                                            6,
-                                            7,
-                                            9,
-                                          ])
-                                            SizedBox(
-                                              width: width,
-                                              child: _project(i, 270),
-                                            ),
-                                        ],
-                                      );
-                                    },
-                                  ),
-                                  const SizedBox(height: 36),
+                                    SizedBox(height: wide ? 110 : 64),
+                                  ],
                                   const Divider(),
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
@@ -989,14 +968,6 @@ class _PortfolioPageState extends State<PortfolioPage> {
     ),
   );
 
-  Widget _project(int index, double height) => ProjectTile(
-    project: projects[index],
-    index: index,
-    height: height,
-    scroll: _scroll,
-    onTap: () => _showProject(projects[index]),
-  );
-
   void _showProject(Project project) => showDialog<void>(
     context: context,
     builder: (context) => Dialog(
@@ -1041,16 +1012,26 @@ class _PortfolioPageState extends State<PortfolioPage> {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
+                    const SizedBox(height: 10),
+                    Text(
+                      project.summary,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        fontSize: 16,
+                        height: 1.5,
+                      ),
+                    ),
+                    if (project.facts.isNotEmpty) ...[
+                      const SizedBox(height: 20),
+                      ProjectFacts(project: project),
+                    ],
                     const SizedBox(height: 16),
                     const Text(
                       'My contribution',
                       style: TextStyle(fontWeight: FontWeight.w700),
                     ),
                     const SizedBox(height: 8),
-                    Text(
-                      project.contribution,
-                      style: const TextStyle(fontSize: 15, height: 1.7),
-                    ),
+                    ProjectContribution(project: project),
                     const SizedBox(height: 20),
                     if (project.highlights.isNotEmpty) ...[
                       const Text(
@@ -1329,6 +1310,122 @@ Future<void> _copy(BuildContext context, String value, String message) async {
   }
 }
 
+class ProjectContribution extends StatelessWidget {
+  const ProjectContribution({super.key, required this.project});
+  final Project project;
+
+  @override
+  Widget build(BuildContext context) {
+    final spans = <TextSpan>[];
+    var start = 0;
+    if (project.emphasis.isNotEmpty) {
+      final pattern = RegExp(project.emphasis.map(RegExp.escape).join('|'));
+      for (final match in pattern.allMatches(project.contribution)) {
+        spans.add(
+          TextSpan(text: project.contribution.substring(start, match.start)),
+        );
+        spans.add(
+          TextSpan(
+            text: match.group(0),
+            style: const TextStyle(fontWeight: FontWeight.w800),
+          ),
+        );
+        start = match.end;
+      }
+    }
+    spans.add(TextSpan(text: project.contribution.substring(start)));
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text.rich(
+          TextSpan(children: spans),
+          style: TextStyle(
+            fontSize: 16,
+            height: 1.85,
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
+        ),
+        if (project.achievements.isNotEmpty) ...[
+          const SizedBox(height: 18),
+          for (final achievement in project.achievements)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    '•  ',
+                    style: TextStyle(fontSize: 16, height: 1.7),
+                  ),
+                  Expanded(
+                    child: Text.rich(
+                      TextSpan(
+                        children: [
+                          TextSpan(
+                            text: '${achievement.$1}. ',
+                            style: const TextStyle(fontWeight: FontWeight.w800),
+                          ),
+                          TextSpan(text: achievement.$2),
+                        ],
+                      ),
+                      style: const TextStyle(fontSize: 15, height: 1.7),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+        ],
+      ],
+    );
+  }
+}
+
+class ProjectFacts extends StatelessWidget {
+  const ProjectFacts({super.key, required this.project});
+
+  final Project project;
+
+  @override
+  Widget build(BuildContext context) => Wrap(
+    spacing: 12,
+    runSpacing: 12,
+    children: [
+      for (final fact in project.facts)
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surfaceContainerLow,
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(
+              color: Theme.of(context).colorScheme.outlineVariant,
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                fact.$1,
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                fact.$2,
+                style: TextStyle(
+                  fontSize: 11,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ],
+          ),
+        ),
+    ],
+  );
+}
+
 class ProjectTile extends StatefulWidget {
   const ProjectTile({
     super.key,
@@ -1349,7 +1446,7 @@ class ProjectTile extends StatefulWidget {
 
 class _ProjectTileState extends State<ProjectTile> {
   final _anchor = GlobalKey();
-  bool _hovered = false;
+
   double _shift = 0;
   double _reveal = 1;
   bool _reduceMotion = false;
@@ -1394,158 +1491,118 @@ class _ProjectTileState extends State<ProjectTile> {
   }
 
   @override
-  Widget build(BuildContext context) => SizedBox(
-    key: _anchor,
-    child: Opacity(
-      opacity: .15 + .85 * _reveal,
-      child: Transform.translate(
-        offset: Offset(0, (1 - _reveal) * 24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final copy = Column(
+      key: ValueKey('project-copy-${widget.project.name}'),
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          widget.project.category,
+          style: TextStyle(
+            fontSize: 10,
+            letterSpacing: 1.5,
+            color: scheme.primary,
+          ),
+        ),
+        const SizedBox(height: 18),
+        Text(
+          widget.project.name,
+          style: const TextStyle(
+            fontSize: 38,
+            fontWeight: FontWeight.w800,
+            height: 1.15,
+          ),
+        ),
+        const SizedBox(height: 20),
+        Text(
+          widget.project.summary,
+          style: const TextStyle(
+            fontSize: 20,
+            height: 1.5,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(height: 18),
+        ProjectContribution(project: widget.project),
+        const SizedBox(height: 22),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          crossAxisAlignment: WrapCrossAlignment.center,
           children: [
-            MouseRegion(
-              onEnter: (_) => setState(() => _hovered = true),
-              onExit: (_) => setState(() => _hovered = false),
-              child: Material(
-                color: Theme.of(context).brightness == Brightness.dark
-                    ? Color.lerp(widget.project.color, Colors.black, .78)
-                    : widget.project.color,
-                borderRadius: BorderRadius.circular(20),
-                clipBehavior: Clip.antiAlias,
-                child: InkWell(
-                  onTap: widget.onTap,
-                  onFocusChange: (value) => setState(() => _hovered = value),
-                  child: Semantics(
-                    label: 'View ${widget.project.name} project details',
-                    button: true,
-                    child: SizedBox(
-                      height: widget.height,
-                      width: double.infinity,
-                      child: Stack(
-                        children: [
-                          Positioned.fill(
-                            child: AnimatedScale(
-                              scale: 1,
-                              duration: _reduceMotion
-                                  ? Duration.zero
-                                  : const Duration(milliseconds: 400),
-                              curve: Curves.easeOutCubic,
-                              child: Transform.translate(
-                                offset: Offset.zero,
-                                child: ProjectArtwork(project: widget.project),
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            right: 17,
-                            top: 17,
-                            child: AnimatedContainer(
-                              duration: const Duration(milliseconds: 180),
-                              width: 37,
-                              height: 37,
-                              decoration: BoxDecoration(
-                                color: _hovered
-                                    ? ink
-                                    : Colors.white.withValues(alpha: .7),
-                                shape: BoxShape.circle,
-                              ),
-                              child: Icon(
-                                Icons.north_east,
-                                size: 17,
-                                color: _hovered ? paper : ink,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+            TextButton.icon(
+              onPressed: widget.onTap,
+              icon: const Icon(Icons.arrow_forward, size: 18),
+              label: const Text('Explore project'),
+            ),
+            for (final link
+                in projectLinks[widget.project.name] ?? <(String, String)>[])
+              IconButton(
+                tooltip: '${widget.project.name} · ${link.$1}',
+                onPressed: () {
+                  if (!openExternalLink(link.$2)) {
+                    _copy(context, link.$2, 'Project link copied');
+                  }
+                },
+                icon: Icon(
+                  link.$1 == 'App Store'
+                      ? Icons.apple
+                      : link.$1 == 'Google Play'
+                      ? Icons.play_arrow_rounded
+                      : Icons.language,
                 ),
               ),
-            ),
-            const SizedBox(height: 22),
-            Row(
-              children: [
-                ProjectIcon(
-                  name: widget.project.name,
-                  fallback: widget.project.icon,
-                  link: widget.project.link,
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    widget.project.name,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      letterSpacing: 0,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-                for (final link
-                    in projectLinks[widget.project.name] ??
-                        [
-                          (
-                            widget.project.link?.contains('apps.apple.com') ??
-                                    false
-                                ? 'App Store'
-                                : 'Website',
-                            widget.project.link ?? '',
-                          ),
-                        ])
-                  if (link.$2.isNotEmpty)
-                    IconButton(
-                      tooltip: '${widget.project.name} · ${link.$1}',
-                      onPressed: () {
-                        if (!openExternalLink(link.$2)) {
-                          _copy(context, link.$2, 'Project link copied');
-                        }
-                      },
-                      icon: Icon(
-                        link.$1 == 'App Store'
-                            ? Icons.apple
-                            : link.$1 == 'Google Play'
-                            ? Icons.play_arrow_rounded
-                            : Icons.language,
-                        size: 20,
-                      ),
-                    ),
-              ],
-            ),
-            const SizedBox(height: 6),
-            Text(
-              widget.project.summary,
-              style: TextStyle(
-                fontSize: 14,
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              'My contribution',
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w700,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              widget.project.contribution,
-              style: const TextStyle(fontSize: 13, height: 1.6),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              widget.project.category,
-              style: TextStyle(
-                fontSize: 9,
-                letterSpacing: 1.6,
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
-            ),
           ],
         ),
+      ],
+    );
+    final images = Material(
+      key: ValueKey('project-images-${widget.project.name}'),
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: widget.onTap,
+        child: Semantics(
+          label: 'View ${widget.project.name} project details',
+          button: true,
+          child: SizedBox(
+            height: widget.project.name == 'Carbee'
+                ? widget.height + 260
+                : widget.height,
+            width: double.infinity,
+            child: widget.project.screens.isEmpty
+                ? ProjectArtwork(project: widget.project)
+                : ScreenshotComposition(project: widget.project, unboxed: true),
+          ),
+        ),
       ),
-    ),
-  );
+    );
+    return SizedBox(
+      key: _anchor,
+      child: Opacity(
+        opacity: .15 + .85 * _reveal,
+        child: Transform.translate(
+          offset: Offset(0, (1 - _reveal) * 24),
+          child: LayoutBuilder(
+            builder: (context, bounds) {
+              if (bounds.maxWidth < 800) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [copy, const SizedBox(height: 28), images],
+                );
+              }
+              final textColumn = Expanded(flex: 4, child: copy);
+              final imageColumn = Expanded(flex: 6, child: images);
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: widget.index.isEven
+                    ? [textColumn, const SizedBox(width: 56), imageColumn]
+                    : [imageColumn, const SizedBox(width: 56), textColumn],
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
 }

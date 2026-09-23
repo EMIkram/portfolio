@@ -202,7 +202,26 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text('Muhammad\nIkram Ul Haq.'), findsOneWidget);
       expect(tester.takeException(), isNull);
-      await tester.ensureVisible(find.text('View selected work ↘'));
+      for (final name in ['Carbee', 'Dr.iQ']) {
+        final copy = tester.getRect(find.byKey(ValueKey('project-copy-$name')));
+        final images = tester.getRect(
+          find.byKey(ValueKey('project-images-$name')),
+        );
+        if (width >= 800) {
+          expect(
+            name == 'Carbee'
+                ? copy.right < images.left
+                : images.right < copy.left,
+            isTrue,
+          );
+        } else {
+          expect(copy.bottom, lessThan(images.top));
+        }
+      }
+      await Scrollable.ensureVisible(
+        tester.element(find.text('View selected work ↘')),
+        alignment: .5,
+      );
       await tester.pumpAndSettle();
       await tester.tap(find.text('View selected work ↘'));
       await tester.pumpAndSettle();
@@ -211,15 +230,45 @@ void main() {
             w is Semantics &&
             w.properties.label == 'View Carbee project details',
       );
-      await tester.ensureVisible(carbee);
+      await Scrollable.ensureVisible(tester.element(carbee), alignment: .5);
       await tester.pumpAndSettle();
       await tester.tap(carbee);
       await tester.pumpAndSettle();
-      expect(find.text('My contribution'), findsOneWidget);
+      final dialog = find.byType(Dialog);
       expect(
-        find.textContaining('Delivered and continue to maintain Carbee'),
+        find.descendant(of: dialog, matching: find.text('My contribution')),
         findsOneWidget,
       );
+      expect(
+        find.descendant(
+          of: dialog,
+          matching: find.textContaining(
+            'I joined Carbee as one of its founding engineers',
+            findRichText: true,
+          ),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(of: dialog, matching: find.text('40,000')),
+        findsOneWidget,
+      );
+      await tester.tap(find.byTooltip('Close project'));
+      await tester.pumpAndSettle();
+      final entimocare = find.byWidgetPredicate(
+        (w) =>
+            w is Semantics &&
+            w.properties.label == 'View Entimocare project details',
+      );
+      await Scrollable.ensureVisible(tester.element(entimocare), alignment: .5);
+      await tester.pumpAndSettle();
+      await tester.tap(entimocare);
+      await tester.pumpAndSettle();
+      expect(
+        find.descendant(of: find.byType(Dialog), matching: find.text('4 apps')),
+        findsOneWidget,
+      );
+      expect(tester.takeException(), isNull);
       await tester.tap(find.byTooltip('Close project'));
       await tester.pumpAndSettle();
       final scrollable = find.byType(Scrollable).first;

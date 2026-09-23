@@ -2,8 +2,13 @@ import 'package:flutter/material.dart';
 import 'portfolio_data.dart';
 
 class ScreenshotComposition extends StatelessWidget {
-  const ScreenshotComposition({super.key, required this.project});
+  const ScreenshotComposition({
+    super.key,
+    required this.project,
+    this.unboxed = false,
+  });
   final Project project;
+  final bool unboxed;
 
   (double, double, double, double)? get _phoneCrop => switch (project.name) {
     'Whatsinit' => (200, 355, 8, 22),
@@ -77,6 +82,78 @@ class ScreenshotComposition extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (unboxed) {
+      return LayoutBuilder(
+        builder: (context, bounds) {
+          if (!project.mobile) {
+            final web = Center(
+              child: AspectRatio(
+                aspectRatio: 1.5,
+                child: LayoutBuilder(
+                  builder: (context, area) => Stack(
+                    children: [
+                      Positioned(
+                        left: 0,
+                        top: 0,
+                        width: area.maxWidth * .88,
+                        child: _floatingScreen(0),
+                      ),
+                      Positioned(
+                        right: 0,
+                        bottom: 8,
+                        width: area.maxWidth * .78,
+                        child: _floatingScreen(2),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+            return Column(
+              children: [
+                Expanded(flex: 5, child: web),
+                const SizedBox(height: 20),
+                Expanded(
+                  flex: 4,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      for (final i in [6, 7, 10])
+                        Flexible(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            child: PhonePreview(child: _screen(i)),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ],
+            );
+          }
+          final count = project.screens.length < 3 ? project.screens.length : 3;
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              for (var i = 0; i < count; i++)
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(
+                      6,
+                      i == 1 ? 0 : 44,
+                      6,
+                      i == 1 ? 44 : 0,
+                    ),
+                    child: project.name == 'LSUK' || project.name == 'AMS'
+                        ? _screen(i)
+                        : PhonePreview(child: _screen(i)),
+                  ),
+                ),
+            ],
+          );
+        },
+      );
+    }
     final scheme = Theme.of(context).colorScheme;
     final features = switch (project.name) {
       'AMS' => [
@@ -279,6 +356,19 @@ class ScreenshotComposition extends StatelessWidget {
       ),
     );
   }
+
+  Widget _floatingScreen(int index) => DecoratedBox(
+    decoration: BoxDecoration(
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withValues(alpha: .12),
+          blurRadius: 22,
+          offset: const Offset(0, 8),
+        ),
+      ],
+    ),
+    child: _screen(index),
+  );
 }
 
 class CarbeeScreenWall extends StatelessWidget {

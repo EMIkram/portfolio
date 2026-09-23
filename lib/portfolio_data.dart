@@ -143,6 +143,9 @@ class Project {
     this.source,
     this.screens = const [],
     this.highlights = const [],
+    this.facts = const [],
+    this.emphasis = const [],
+    this.achievements = const [],
   });
 
   final String name, category, summary, contribution;
@@ -154,6 +157,9 @@ class Project {
   final String? source;
   final List<(String, String)> screens;
   final List<(String, String)> highlights;
+  final List<(String, String)> facts;
+  final List<String> emphasis;
+  final List<(String, String)> achievements;
 }
 
 const projects = [
@@ -161,11 +167,35 @@ const projects = [
     'Carbee',
     'AUTOMOTIVE · MOBILE & WEB',
     'How we buy and sell cars now.',
-    'Delivered and continue to maintain Carbee’s dealership and admin portals at Techtronix, shipping new modules with Flutter and BLoC. Recent development uses OpenSpec to define requirements and implementation tasks before coding, followed by code review and QA validation.',
+    'I joined Carbee as one of its founding engineers, building and maintaining its dealership and admin web portals at Techtronix. Now a Senior Software Engineer and Team Lead, I manage the dealership systems, support mobile developers, and guide delivery as the product grows. Carbee now serves 40,000 users.',
     Color(0xFFFFEBB8),
     Icons.directions_car_rounded,
     ['Flutter Web', 'BLoC', 'OpenSpec · SDD', 'CI/CD'],
     link: 'https://carbee.com.au',
+    achievements: [
+      (
+        'E2E encryption',
+        'Built a service supporting all four Carbee apps, with straightforward integration through API interceptors.',
+      ),
+      (
+        'Billing & invoice access',
+        'Built the billing module with token-based access to invoices opened from email.',
+      ),
+      (
+        'Multi-tenancy',
+        'Integrated multi-tenancy so the same user can log in across each platform.',
+      ),
+    ],
+    emphasis: [
+      'founding engineers',
+      'Senior Software Engineer and Team Lead',
+      '40,000 users',
+    ],
+    facts: [
+      ('40,000', 'Product users'),
+      ('From day one', 'Development involvement'),
+      ('Team Lead', 'Current responsibility'),
+    ],
     screens: [
       ('Admin · Overview', 'assets/images/carbee-admin-overview.png'),
       ('Admin · Lead analytics', 'assets/images/carbee-admin-analytics.png'),
@@ -249,7 +279,7 @@ const projects = [
       ),
       (
         'Admin & dealership portals',
-        'Delivered both portals and continue to maintain them and ship new modules. Own requirements/design alignment, implementation, QA coordination, and releases.',
+        'Built the dealership web portal from the start and delivered the admin portal. Continue to own requirements and design alignment, implementation, QA coordination, releases, and ongoing improvements.',
       ),
       (
         'Analytics & operational workflows',
@@ -281,7 +311,7 @@ const projects = [
       ),
       (
         'Technical leadership',
-        'Feature planning, architecture guidance, code reviews, mentoring, and release coordination. Introduced Kanban workflows and bi-weekly Flutter learning sessions.',
+        'Progressed into a senior Team Lead role, managing dealership systems and assisting mobile developers alongside web delivery. Lead feature planning, code reviews, mentoring, and release coordination; introduced Kanban workflows and bi-weekly Flutter learning sessions.',
       ),
     ],
   ),
@@ -295,6 +325,7 @@ const projects = [
     ['Flutter', 'BLoC', 'OpenSpec · SDD', 'Freelance'],
     mobile: true,
     link: 'https://apps.apple.com/us/app/psxascend/id1547303438',
+    emphasis: ['led its migration to Flutter', 'Android and iOS'],
     source: 'Screenshots from the official App Store listing.',
     screens: [
       ('Vehicle details', 'assets/images/psx-ascend-2.jpg'),
@@ -313,14 +344,9 @@ const projects = [
     'Co-founder of Carpool, a live Flutter/Android product connecting drivers and riders. Contribute to its development and ongoing maintenance. I use it to apply AI-agent-assisted, spec-driven development across requirements, architecture, implementation, release, and iteration.',
     Color(0xFFD5EDE7),
     Icons.route_rounded,
-    [
-      'GetX',
-      'Flutter',
-      'Android',
-      'Co-founder',
-      'AI-assisted development',
-    ],
+    ['GetX', 'Flutter', 'Android', 'Co-founder', 'AI-assisted development'],
     mobile: true,
+    emphasis: ['Co-founder of Carpool', 'spec-driven development'],
     link:
         'https://play.google.com/store/apps/details?id=com.carpoolingpk.carpool&hl=en',
     source: 'Screenshots from the official Google Play listing.',
@@ -344,6 +370,7 @@ const projects = [
     ['Swift', 'UIKit', 'Native iOS', 'App Store delivery'],
     mobile: true,
     link: 'https://apps.apple.com/pk/app/dr-iq/id1345802108',
+    emphasis: ['NHS patients', 'approximately 90% of the codebase'],
     source:
         'Product screenshots supplied by Ikram. Work at AT-Tech: June 2022–March 2024.',
     screens: [
@@ -423,6 +450,11 @@ const projects = [
     ['GetX', 'Flutter', 'Invoicing', 'PDF generation', 'Local storage'],
     mobile: true,
     link: 'https://play.google.com/store/apps/details?id=io.invoicelabs.app',
+    emphasis: [
+      'Led the migration',
+      'Android, iOS, and Linux',
+      'mentored developers',
+    ],
     source: 'Screenshots of the Invoice Labs app.',
     screens: [
       ('Invoice editor', 'assets/images/invoicelabs-editor.png'),
@@ -476,6 +508,35 @@ const projects = [
       ('Employee profile', 'assets/images/ams-5.png'),
       ('Welcome', 'assets/images/ams-0.png'),
       ('Organization login', 'assets/images/ams-1.png'),
+    ],
+  ),
+  Project(
+    'Entimocare',
+    'MOBILE & WEB · ENCRYPTION & BILLING',
+    'Shared encryption across four applications.',
+    'Led the end-to-end encryption module across two mobile applications and two web applications. Built the module and worked with the team to implement it across all four apps. Independently implemented billing on both web portals and collaborated with backend developers on integration.',
+    Color(0xFFE8DFF7),
+    Icons.lock_outline_rounded,
+    ['End-to-end encryption', 'Billing', 'Module leadership'],
+    emphasis: [
+      'end-to-end encryption',
+      'two mobile applications and two web applications',
+      'Independently implemented billing',
+    ],
+    facts: [
+      ('4 apps', 'Encryption implementation'),
+      ('2 portals', 'Billing delivery'),
+      ('Module lead', 'Encryption ownership'),
+    ],
+    highlights: [
+      (
+        'Encryption across mobile and web',
+        'Built the end-to-end encryption module and led its implementation across two mobile apps and two web apps, coordinating the work across the team.',
+      ),
+      (
+        'Billing on both portals',
+        'Personally implemented the billing module on both web portals and worked with backend developers through integration discussions and coordination meetings.',
+      ),
     ],
   ),
 ];

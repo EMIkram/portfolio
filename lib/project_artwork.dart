@@ -18,6 +18,34 @@ class ProjectArtwork extends StatelessWidget {
     if (project.screens.isNotEmpty) {
       return ScreenshotComposition(project: project);
     }
+    if (project.name == 'Entimocare') {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                project.icon,
+                size: 64,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+              const SizedBox(height: 20),
+              Text(
+                'End-to-end encryption',
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              const SizedBox(height: 10),
+              const Text(
+                'Two mobile apps · Two web apps',
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+      );
+    }
     final desktop = project.name == 'Carbee';
     return ClipRect(
       child: LayoutBuilder(
