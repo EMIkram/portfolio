@@ -5,6 +5,56 @@ import 'package:portfolio_flutter/portfolio_data.dart';
 import 'package:portfolio_flutter/screenshot_gallery.dart';
 
 void main() {
+  for (final width in [350.0, 980.0]) {
+    testWidgets('Phone previews retain proportions at $width px', (
+      tester,
+    ) async {
+      tester.view.physicalSize = const Size(1100, 800);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      for (final project in projects.where((p) => p.mobile)) {
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: Center(
+                child: SizedBox(
+                  width: width,
+                  height: 340,
+                  child: ScreenshotComposition(project: project, unboxed: true),
+                ),
+              ),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+        final phones = find.byType(PhonePreview);
+        if (project.name == 'LSUK' || project.name == 'AMS') {
+          expect(phones, findsNothing);
+        } else {
+          expect(phones, findsWidgets);
+          for (final phone in phones.evaluate()) {
+            final size = tester.getSize(find.byWidget(phone.widget));
+            expect(
+              size.width / size.height,
+              closeTo(.46, .001),
+              reason: project.name,
+            );
+          }
+        }
+        if (project.name == 'Ayuda Health') {
+          final diary = find.byWidgetPredicate(
+            (w) =>
+                w is ScreenshotImage &&
+                w.path == 'assets/images/ayuda-diary.jpg',
+          );
+          final frameTop = tester.getTopLeft(phones.last).dy;
+          expect(tester.getTopLeft(diary).dy - frameTop, lessThanOrEqualTo(4));
+        }
+        expect(tester.takeException(), isNull, reason: project.name);
+      }
+    });
+  }
   testWidgets('Effects icon responds to available width', (tester) async {
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
@@ -253,22 +303,6 @@ void main() {
         find.descendant(of: dialog, matching: find.text('40,000')),
         findsOneWidget,
       );
-      await tester.tap(find.byTooltip('Close project'));
-      await tester.pumpAndSettle();
-      final entimocare = find.byWidgetPredicate(
-        (w) =>
-            w is Semantics &&
-            w.properties.label == 'View Entimocare project details',
-      );
-      await Scrollable.ensureVisible(tester.element(entimocare), alignment: .5);
-      await tester.pumpAndSettle();
-      await tester.tap(entimocare);
-      await tester.pumpAndSettle();
-      expect(
-        find.descendant(of: find.byType(Dialog), matching: find.text('4 apps')),
-        findsOneWidget,
-      );
-      expect(tester.takeException(), isNull);
       await tester.tap(find.byTooltip('Close project'));
       await tester.pumpAndSettle();
       final scrollable = find.byType(Scrollable).first;

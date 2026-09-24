@@ -167,7 +167,7 @@ const projects = [
     'Carbee',
     'AUTOMOTIVE · MOBILE & WEB',
     'How we buy and sell cars now.',
-    'I joined Carbee as one of its founding engineers, building and maintaining its dealership and admin web portals at Techtronix. Now a Senior Software Engineer and Team Lead, I manage the dealership systems, support mobile developers, and guide delivery as the product grows. Carbee now serves 40,000 users.',
+    'I joined Carbee as one of its founding engineers, built the dealership web portal from scratch and took ownership of both Admin and Dealership web portals. Now a Senior Software Engineer and Team Lead, I manage the web releases, support mobile developers, and guide delivery as the product grows. Carbee now serves 40,000 users.',
     Color(0xFFFFEBB8),
     Icons.directions_car_rounded,
     ['Flutter Web', 'BLoC', 'OpenSpec · SDD', 'CI/CD'],
@@ -175,11 +175,11 @@ const projects = [
     achievements: [
       (
         'E2E encryption',
-        'Built a service supporting all four Carbee apps, with straightforward integration through API interceptors.',
+        'Built and led implementation of an E2E encryption service across two mobile apps and two web apps, integrated through API interceptors.',
       ),
       (
         'Billing & invoice access',
-        'Built the billing module with token-based access to invoices opened from email.',
+        'Personally built billing on both portals, including token-based access to invoices opened from email, and coordinated integration with backend developers.',
       ),
       (
         'Multi-tenancy',
@@ -508,35 +508,6 @@ const projects = [
       ('Employee profile', 'assets/images/ams-5.png'),
       ('Welcome', 'assets/images/ams-0.png'),
       ('Organization login', 'assets/images/ams-1.png'),
-    ],
-  ),
-  Project(
-    'Entimocare',
-    'MOBILE & WEB · ENCRYPTION & BILLING',
-    'Shared encryption across four applications.',
-    'Led the end-to-end encryption module across two mobile applications and two web applications. Built the module and worked with the team to implement it across all four apps. Independently implemented billing on both web portals and collaborated with backend developers on integration.',
-    Color(0xFFE8DFF7),
-    Icons.lock_outline_rounded,
-    ['End-to-end encryption', 'Billing', 'Module leadership'],
-    emphasis: [
-      'end-to-end encryption',
-      'two mobile applications and two web applications',
-      'Independently implemented billing',
-    ],
-    facts: [
-      ('4 apps', 'Encryption implementation'),
-      ('2 portals', 'Billing delivery'),
-      ('Module lead', 'Encryption ownership'),
-    ],
-    highlights: [
-      (
-        'Encryption across mobile and web',
-        'Built the end-to-end encryption module and led its implementation across two mobile apps and two web apps, coordinating the work across the team.',
-      ),
-      (
-        'Billing on both portals',
-        'Personally implemented the billing module on both web portals and worked with backend developers through integration discussions and coordination meetings.',
-      ),
     ],
   ),
 ];

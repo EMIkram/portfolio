@@ -19,6 +19,16 @@ class ScreenshotComposition extends StatelessWidget {
 
   Widget _screen(int i) {
     final screen = project.screens[i];
+    if (project.name == 'Ayuda Health' && i == 2) {
+      return Align(
+        alignment: Alignment.topCenter,
+        child: ScreenshotImage(
+          screen.$2,
+          fit: BoxFit.contain,
+          semanticLabel: screen.$1,
+        ),
+      );
+    }
     final crop = _phoneCrop;
     if (crop != null) {
       final height = crop.$2 - crop.$3 - crop.$4;
@@ -146,7 +156,7 @@ class ScreenshotComposition extends StatelessWidget {
                     ),
                     child: project.name == 'LSUK' || project.name == 'AMS'
                         ? _screen(i)
-                        : PhonePreview(child: _screen(i)),
+                        : Center(child: PhonePreview(child: _screen(i))),
                   ),
                 ),
             ],

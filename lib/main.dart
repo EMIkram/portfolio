@@ -409,7 +409,6 @@ class _PortfolioPageState extends State<PortfolioPage> {
                                   for (final entry in [
                                     0,
                                     3,
-                                    10,
                                     1,
                                     2,
                                     8,
